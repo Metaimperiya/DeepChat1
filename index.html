@@ -2,646 +2,770 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DeepChat</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #111; color: #eee; font-family: system-ui, sans-serif; padding: 10px; }
-        .card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 14px; }
-        .flex { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-        .btn { background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 4px 12px; border-radius: 30px; cursor: pointer; font-size: 13px; }
-        .btn:hover { background: #3a3a3a; }
-        .btn-primary { background: #ff8c00; border-color: #ff8c00; color: #111; font-weight: bold; }
-        .btn-primary:hover { background: #ffa033; }
-        .btn-danger { background: #6a1a1a; border-color: #6a1a1a; color: #ff8888; }
-        .btn-danger:hover { background: #8a2a2a; }
-        input, textarea { background: #0f0f0f; border: 1px solid #333; color: #eee; padding: 6px 10px; border-radius: 8px; width: 100%; font-family: inherit; }
-        textarea { min-height: 50px; resize: vertical; }
-        .post { border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px; margin-bottom: 12px; background: #141414; }
-        .post-author { color: #ffaa44; font-weight: bold; }
-        .post-time { color: #666; font-size: 12px; }
-        .post-text { margin: 6px 0; }
-        .post-actions { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-        .chat-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 8px; height: 300px; overflow-y: auto; margin-bottom: 8px; }
-        .msg { border-bottom: 1px solid #1f1f1f; padding: 6px 0; }
-        .msg-author { color: #ffaa44; font-weight: bold; }
-        .msg-time { color: #666; font-size: 11px; }
-        .room-item { padding: 5px 10px; border: 1px solid #2a2a2a; border-radius: 30px; cursor: pointer; display: inline-block; margin: 3px; }
-        .room-item.active { border-color: #ff8c00; background: #2a2a2a; }
-        .sidebar { display: none; position: fixed; top: 0; left: 0; width: 220px; height: 100%; background: #151515; border-right: 1px solid #2a2a2a; padding: 14px; z-index: 100; overflow-y: auto; }
-        .sidebar.open { display: block; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 99; }
-        .overlay.open { display: block; }
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; justify-content: center; align-items: center; padding: 16px; }
-        .modal.open { display: flex; }
-        .modal-box { background: #1a1a1a; padding: 20px; border-radius: 14px; max-width: 400px; width: 100%; border: 1px solid #333; }
-        .badge { background: #ff8c00; color: #111; font-size: 10px; padding: 0 8px; border-radius: 20px; }
-        .hidden { display: none; }
-        .marquee { background: #0f0f0f; padding: 4px 8px; border-radius: 6px; margin: 4px 0; border: 1px solid #222; color: #ff8c00; font-weight: bold; overflow: hidden; white-space: nowrap; }
-        .marquee span { display: inline-block; animation: scroll 12s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .img-preview { max-width: 100%; max-height: 150px; border-radius: 8px; margin: 4px 0; border: 1px solid #333; }
-        .post-tag { color: #66aaff; background: #0f0f1a; padding: 0 8px; border-radius: 20px; border: 1px solid #1a1a2a; font-size: 12px; display: inline-block; margin: 2px; }
-        .post-frame { border: 1px solid #1a1a2a; border-radius: 8px; overflow: hidden; margin: 6px 0; }
-        .post-frame iframe { width: 100%; height: 200px; border: none; }
-        .admin-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #333; margin: 0 4px; cursor: pointer; }
-        .admin-dot.active { border-color: #ff8c00; background: rgba(255,140,0,0.2); }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#18191a;color:#e4e6eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0;height:100vh;display:flex;flex-direction:column}
+        /* Telegram‑like sidebar */
+        .sidebar{position:fixed;top:0;left:-300px;width:280px;height:100%;background:#1c1c1e;border-right:1px solid #3a3b3c;transition:left .2s ease;z-index:1000;padding:16px 12px;overflow-y:auto}
+        .sidebar.open{left:0}
+        .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #3a3b3c;margin-bottom:12px}
+        .sidebar-header span{font-weight:700;font-size:18px;color:#fff}
+        .sidebar-close{background:0;border:0;color:#888;font-size:22px;cursor:pointer}
+        .sidebar-user{background:#2d2d2f;padding:10px;border-radius:12px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .sidebar-user .name{font-weight:600}
+        .sidebar-user .status{font-size:12px;color:#888}
+        .nav-item{padding:10px 12px;border-radius:10px;cursor:pointer;color:#b0b3b8;display:flex;align-items:center;gap:12px;font-size:15px;margin-bottom:2px}
+        .nav-item:hover{background:#3a3b3c;color:#fff}
+        .nav-item.active{background:#3a3b3c;color:#fff}
+        .rooms-label{color:#888;font-size:13px;text-transform:uppercase;letter-spacing:.5px;padding:16px 8px 6px}
+        .room-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;cursor:pointer;color:#b0b3b8;font-size:14px;margin-bottom:2px}
+        .room-item:hover{background:#3a3b3c;color:#fff}
+        .room-item.active{background:#3a3b3c;color:#fff}
+        .room-count{margin-left:auto;font-size:12px;color:#777;background:#2d2d2f;padding:0 10px;border-radius:30px}
+        .create-room-btn{display:none;width:100%;background:#2d2d2f;border:0;color:#fff;padding:10px;border-radius:30px;margin-top:12px;font-weight:600;cursor:pointer}
+        .create-room-btn.show{display:block}
+        .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;display:none}
+        .overlay.open{display:block}
+        /* main layout */
+        .main{flex:1;display:flex;flex-direction:column;max-width:780px;margin:0 auto;width:100%;padding:0 10px 70px}
+        /* header */
+        .top-bar{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #3a3b3c;margin-bottom:12px;background:#18191a;position:sticky;top:0;z-index:100}
+        .hamburger{background:0;border:0;color:#fff;font-size:24px;cursor:pointer;padding:0 4px}
+        .logo{font-weight:800;font-size:18px;display:flex;align-items:center;gap:6px}
+        .logo span{color:#0088cc}
+        .badge{background:#0088cc;color:#fff;font-size:10px;padding:0 8px;border-radius:30px;font-weight:600}
+        .hdr-user{margin-left:auto;font-size:13px;color:#b0b3b8;background:#2d2d2f;padding:4px 12px;border-radius:30px}
+        .hdr-badge{display:none;font-size:11px;color:#ff8c00;background:rgba(255,140,0,.15);padding:2px 10px;border-radius:30px;border:1px solid rgba(255,140,0,.2)}
+        .hdr-badge.show{display:inline-block}
+        /* card / post */
+        .card{background:#242526;border-radius:16px;padding:12px;margin-bottom:12px;border:1px solid #3a3b3c}
+        .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .card-header .title{font-weight:700;font-size:16px}
+        .card-header .status{font-size:12px;color:#888}
+        /* feed */
+        .df-form{display:none;background:#18191a;border:1px solid #3a3b3c;border-radius:12px;padding:12px;margin-bottom:12px}
+        .df-form.show{display:block}
+        .df-form input,.df-form textarea{width:100%;padding:8px 12px;background:#3a3b3c;border:0;border-radius:8px;color:#fff;font-size:14px;margin-bottom:6px;font-family:inherit}
+        .df-form textarea{min-height:50px;resize:vertical}
+        .df-form .btn-row{display:flex;gap:6px;flex-wrap:wrap}
+        .df-form .btn-row input{flex:1;min-width:80px}
+        .post{background:#242526;border:1px solid #3a3b3c;border-radius:14px;padding:14px;margin-bottom:12px}
+        .post-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .post-author{color:#e4e6eb;font-weight:700}
+        .post-time{color:#888;font-size:12px}
+        .post-text{word-break:break-word;margin:6px 0;line-height:1.5}
+        .post-img{max-width:100%;max-height:240px;border-radius:10px;margin:6px 0;border:1px solid #3a3b3c;cursor:pointer}
+        .post-frame{border:1px solid #3a3b3c;border-radius:10px;overflow:hidden;margin:6px 0}
+        .post-frame iframe{width:100%;height:200px;border:0}
+        .post-buttons{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+        .post-buttons a{background:#0088cc;color:#fff;padding:6px 16px;border-radius:30px;text-decoration:none;font-weight:600;font-size:14px}
+        .post-buttons a:hover{background:#00a3e0}
+        .post-tags{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+        .post-tags span{color:#66aaff;background:#18191a;padding:0 10px;border-radius:20px;border:1px solid #3a3b3c;font-size:12px}
+        .post-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid #3a3b3c}
+        .post-actions .btn{background:#3a3b3c;border:0;color:#e4e6eb;padding:4px 14px;border-radius:30px;font-size:13px;cursor:pointer}
+        .post-actions .btn:hover{background:#4e4f50}
+        .post-actions .btn-danger{background:#5c1a1a;color:#ff8888}
+        .post-actions .btn-danger:hover{background:#7a2222}
+        .post-actions .btn-primary{background:#0088cc;color:#fff}
+        .post-actions .btn-primary:hover{background:#00a3e0}
+        /* chat */
+        .chat-panel{background:#242526;border:1px solid #3a3b3c;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:60vh;min-height:300px}
+        .chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+        .msg{background:#18191a;border-radius:10px;padding:8px 12px;border:1px solid #3a3b3c}
+        .msg .author{color:#e4e6eb;font-weight:700;font-size:14px}
+        .msg .time{color:#888;font-size:11px;margin-left:4px}
+        .msg .text{word-break:break-word;margin:2px 0}
+        .msg .marquee{background:#18191a;padding:2px 0;overflow:hidden;white-space:nowrap;border-radius:4px;margin-bottom:4px;border:1px solid #3a3b3c}
+        .msg .marquee span{display:inline-block;animation:scroll 12s linear infinite;color:#ff8c00;font-weight:600;font-size:13px;padding-left:12px}
+        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+        .msg .img-preview{max-width:100%;max-height:130px;border-radius:6px;margin:4px 0;border:1px solid #3a3b3c;cursor:pointer}
+        .msg .post-frame{border:1px solid #3a3b3c;border-radius:6px;overflow:hidden;margin:4px 0}
+        .msg .post-frame iframe{width:100%;height:160px;border:0}
+        .msg .msg-actions{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+        .msg .msg-actions button{background:#3a3b3c;border:0;color:#e4e6eb;padding:2px 12px;border-radius:30px;font-size:12px;cursor:pointer}
+        .msg .msg-actions button:hover{background:#4e4f50}
+        /* chat input */
+        .chat-input-wrap{padding:8px;background:#18191a;border-top:1px solid #3a3b3c}
+        .chat-input-row{display:flex;gap:6px}
+        .chat-input-row input{flex:1;padding:8px 14px;background:#3a3b3c;border:0;border-radius:30px;color:#fff;font-size:14px;outline:0}
+        .chat-input-row button{background:#0088cc;border:0;border-radius:30px;padding:0 16px;font-weight:700;color:#fff;cursor:pointer;font-size:14px}
+        .chat-input-row button:hover{background:#00a3e0}
+        .chat-file-row{margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .chat-file-row label{background:#3a3b3c;padding:2px 12px;border-radius:30px;font-size:12px;cursor:pointer}
+        .chat-file-row .preview{display:none;align-items:center;gap:4px;background:#2d2d2f;padding:2px 10px 2px 2px;border-radius:30px;border:1px solid #3a3b3c}
+        .chat-file-row .preview.show{display:flex}
+        .chat-file-row .preview img{width:24px;height:24px;border-radius:30px;object-fit:cover}
+        .chat-file-row .preview .name{font-size:11px;max-width:50px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .chat-file-row .preview .remove{background:#5c1a1a;color:#ff8888;border:0;border-radius:30px;padding:0 8px;cursor:pointer;font-size:12px}
+        /* admin bar in chat */
+        .admin-bar{display:none;padding:8px;background:#18191a;border-top:1px solid #3a3b3c;flex-direction:column;gap:4px}
+        .admin-bar.show{display:flex}
+        .admin-bar .bar-header{display:flex;justify-content:space-between;align-items:center}
+        .admin-bar .bar-header span{color:#ff8c00;font-weight:700;font-size:13px}
+        .admin-bar .bar-header button{background:0;border:1px solid #3a3b3c;color:#888;padding:0 10px;border-radius:30px;cursor:pointer;font-size:12px}
+        .admin-bar .admin-form{display:none;flex-direction:column;gap:4px}
+        .admin-bar .admin-form.open{display:flex}
+        .admin-bar .admin-form input,.admin-bar .admin-form textarea{width:100%;padding:6px 10px;background:#3a3b3c;border:0;border-radius:6px;color:#fff;font-size:13px;font-family:inherit}
+        .admin-bar .admin-form textarea{min-height:34px;resize:vertical}
+        .admin-bar .admin-form .abtn-row{display:flex;gap:4px}
+        .admin-bar .admin-form .abtn-row input{flex:1}
+        .admin-bar .admin-form .abtn-remove{background:#5c1a1a;color:#ff8888;border:0;border-radius:4px;padding:0 8px;cursor:pointer}
+        .admin-bar .admin-form .aadd{background:#3a3b3c;border:0;color:#ff8c00;padding:2px 12px;border-radius:30px;cursor:pointer;font-size:12px;width:fit-content}
+        .admin-bar .admin-form .apublish{background:#0088cc;border:0;border-radius:30px;padding:4px;font-weight:700;color:#fff;cursor:pointer;margin-top:4px}
+        .admin-bar .admin-form .apublish:hover{background:#00a3e0}
+        /* admin dots */
+        .admin-dots{position:fixed;bottom:12px;right:12px;display:flex;gap:8px;z-index:999}
+        .admin-dot{width:14px;height:14px;border-radius:50%;border:2px solid #3a3b3c;cursor:pointer;transition:.2s}
+        .admin-dot.feed-dot{background:rgba(255,140,0,.1);border-color:rgba(255,140,0,.2)}
+        .admin-dot.feed-dot.active{background:rgba(255,140,0,.3);border-color:#ff8c00}
+        .admin-dot.room-dot{background:rgba(0,136,204,.1);border-color:rgba(0,136,204,.2)}
+        .admin-dot.room-dot.active{background:rgba(0,136,204,.3);border-color:#0088cc}
+        /* modals */
+        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:2000;justify-content:center;align-items:center;padding:16px}
+        .modal.open{display:flex}
+        .modal-box{background:#242526;border-radius:16px;padding:20px;max-width:400px;width:100%;border:1px solid #3a3b3c}
+        .modal-box h3{color:#fff;margin-bottom:4px}
+        .modal-box .sub{color:#888;font-size:14px;margin-bottom:12px}
+        .modal-box input{width:100%;padding:8px 12px;background:#3a3b3c;border:0;border-radius:8px;color:#fff;font-size:14px;margin-bottom:8px;outline:0}
+        .modal-box .mbtns{display:flex;gap:8px;justify-content:flex-end}
+        .modal-box .mbtns button{padding:6px 18px;border-radius:30px;border:0;font-weight:600;cursor:pointer}
+        .modal-box .mbtns .cancel{background:#3a3b3c;color:#b0b3b8}
+        .modal-box .mbtns .cancel:hover{background:#4e4f50}
+        .modal-box .mbtns .save{background:#0088cc;color:#fff}
+        .modal-box .mbtns .save:hover{background:#00a3e0}
+        .modal-box .mbtns .save.orange{background:#ff8c00;color:#111}
+        .modal-box .mbtns .save.orange:hover{background:#ffa033}
+        /* edit modal */
+        .edit-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:2000;justify-content:center;align-items:center;padding:12px}
+        .edit-overlay.open{display:flex}
+        .edit-box{background:#242526;border-radius:14px;padding:16px;max-width:400px;width:100%;border:1px solid #3a3b3c;max-height:90vh;overflow-y:auto}
+        .edit-box h2{color:#ff8c00;font-size:16px;margin-bottom:6px}
+        .edit-box input,.edit-box textarea{width:100%;padding:6px 10px;background:#3a3b3c;border:0;border-radius:6px;color:#fff;font-size:13px;margin-bottom:4px;font-family:inherit;resize:vertical}
+        .edit-box textarea{min-height:36px}
+        .edit-box .ebtn-row{display:flex;gap:4px;margin-bottom:3px}
+        .edit-box .ebtn-row input{flex:1;margin-bottom:0}
+        .edit-box .ebtn-rem{background:#5c1a1a;color:#ff8888;border:0;border-radius:4px;padding:0 8px;cursor:pointer}
+        .edit-box .eactions{display:flex;gap:6px;margin-top:6px}
+        .edit-box .eactions button{padding:6px;border-radius:30px;border:0;font-weight:600;flex:1;cursor:pointer}
+        .edit-box .eactions .save{background:#ff8c00;color:#111}
+        .edit-box .eactions .save:hover{background:#ffa033}
+        .edit-box .eactions .close{background:#3a3b3c;color:#b0b3b8}
+        .edit-box .eactions .close:hover{background:#4e4f50}
+        .edit-box .edelete{width:100%;background:#5c1a1a;color:#ff8888;border:0;border-radius:30px;padding:6px;font-weight:600;margin-top:6px;cursor:pointer}
+        .edit-box .edelete:hover{background:#7a2222}
+        .scroll::-webkit-scrollbar{width:4px}
+        .scroll::-webkit-scrollbar-thumb{background:#3a3b3c;border-radius:4px}
+        @media(max-width:500px){.sidebar{width:250px;left:-270px}.chat-panel{height:50vh}}
     </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR (Telegram style) -->
 <div class="sidebar" id="sidebar">
-    <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-        <span style="font-weight:bold;color:#ff8c00;">DeepChat</span>
-        <button class="btn" onclick="toggleSidebar()">✕</button>
+    <div class="sidebar-header">
+        <span>💬 DeepChat</span>
+        <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
     </div>
-    <div style="padding:6px 0;border-bottom:1px solid #222;margin-bottom:8px;">
-        <span id="sbUserName">Гость</span>
+    <div class="sidebar-user">
+        <div>👤</div>
+        <div><div class="name" id="sbUserName">Гость</div><div class="status">онлайн</div></div>
     </div>
-    <div class="btn" style="display:block;margin-bottom:4px;" onclick="goFeed()">📰 Лента</div>
-    <div class="btn" style="display:block;margin-bottom:8px;" onclick="goRooms()">💬 Комнаты</div>
-    <div style="color:#666;font-size:12px;margin:6px 0;">Комнаты</div>
-    <div id="roomList"><span style="color:#444;">Нет комнат</span></div>
-    <div style="margin-top:10px;">
-        <button class="btn btn-primary hidden" id="createRoomBtn" onclick="openCreateRoom()">➕ Создать</button>
-    </div>
+    <div class="nav-item active" onclick="goFeed()">📰 Лента</div>
+    <div class="nav-item" onclick="goRooms()">💬 Комнаты</div>
+    <div class="rooms-label">📋 Комнаты</div>
+    <div id="roomList"><div style="color:#555;padding:8px;">Нет комнат</div></div>
+    <button class="create-room-btn" id="createRoomBtn" onclick="openCreateRoom()">➕ Создать комнату</button>
 </div>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <!-- MAIN -->
-<div style="max-width:700px;margin:0 auto;">
+<div class="main">
 
-    <!-- HEADER -->
-    <div style="display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid #222;margin-bottom:10px;">
-        <button class="btn" onclick="toggleSidebar()">☰</button>
-        <span style="font-weight:bold;">Deep<span style="color:#ff8c00;">Chat</span> <span class="badge">BETA</span></span>
-        <span style="font-size:12px;color:#666;margin-left:auto;" id="hdrUser">👤 Гость</span>
-        <span class="badge hidden" id="hdrFeedBadge">Админ ленты</span>
-        <span class="badge hidden" id="hdrRoomBadge">Админ комнат</span>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="logo">Deep<span>Chat</span><span class="badge">BETA</span></div>
+        <span class="hdr-badge" id="hdrFeedBadge">📰 Админ</span>
+        <span class="hdr-badge" id="hdrRoomBadge">💬 Админ</span>
+        <span class="hdr-user" id="hdrUser">👤 Гость</span>
     </div>
 
-    <!-- FEED SECTION -->
+    <!-- FEED -->
     <div id="feedSection">
         <div class="card">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-                <span style="font-weight:bold;">📰 DeepFeed</span>
-                <span style="color:#666;font-size:12px;">● онлайн</span>
+            <div class="card-header">
+                <span class="title">📰 DeepFeed</span>
+                <span class="status">● онлайн</span>
             </div>
-            <!-- ADMIN FORM -->
-            <div id="feedForm" class="hidden" style="background:#0f0f0f;border:1px solid #2a2a2a;border-radius:8px;padding:10px;margin-bottom:12px;">
-                <div style="font-weight:bold;color:#ff8c00;margin-bottom:6px;">✏️ Новый пост</div>
+            <!-- admin form -->
+            <div class="df-form" id="feedForm">
+                <div style="font-weight:700;color:#ff8c00;margin-bottom:4px;">✏️ Новый пост</div>
                 <input type="text" id="fMarquee" placeholder="📢 Бегущая строка">
-                <textarea id="fText" placeholder="📝 Текст поста"></textarea>
+                <textarea id="fText" placeholder="📝 Текст поста..."></textarea>
                 <input type="url" id="fLink" placeholder="🔗 Ссылка (iframe)">
                 <input type="text" id="fHashtags" placeholder="#хештеги через пробел">
-                <div style="color:#888;font-size:12px;margin:4px 0;">Кнопки</div>
+                <div style="color:#888;font-size:12px;margin:3px 0;">🔘 Кнопки</div>
                 <div id="fBtns"></div>
-                <button class="btn" style="margin:3px 0;" onclick="fAddBtn()">➕ Кнопку</button>
-                <div style="display:flex;gap:6px;margin-top:8px;">
-                    <button class="btn btn-primary" onclick="fSubmit()">📤 Опубликовать</button>
-                    <button class="btn" onclick="fCancel()">✕ Отмена</button>
+                <button class="btn" style="background:#3a3b3c;border:0;color:#fff;padding:2px 14px;border-radius:30px;cursor:pointer;font-size:13px;margin-bottom:4px;" onclick="fAddBtn()">➕ Кнопку</button>
+                <div style="display:flex;gap:6px;margin-top:6px;">
+                    <button class="btn" style="background:#ff8c00;border:0;color:#111;padding:6px 20px;border-radius:30px;font-weight:700;cursor:pointer;font-size:14px;" id="fSubmitBtn" onclick="fSubmit()">📤 Опубликовать</button>
+                    <button class="btn" style="background:#3a3b3c;border:0;color:#b0b3b8;padding:6px 20px;border-radius:30px;cursor:pointer;font-size:14px;" onclick="fCancel()">✕ Отмена</button>
                 </div>
             </div>
-            <!-- POSTS -->
+            <!-- posts -->
             <div id="feedPosts"></div>
         </div>
     </div>
 
-    <!-- CHAT SECTION -->
+    <!-- CHAT -->
     <div id="chatSection" style="display:none;">
         <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-weight:bold;" id="chatRoomLabel">💬 Комната</span>
-                <button class="btn" onclick="goFeed()">← Назад</button>
+            <div class="card-header">
+                <span class="title" id="chatRoomLabel">💬 Комната</span>
+                <button class="btn" style="background:#3a3b3c;border:0;color:#b0b3b8;padding:4px 14px;border-radius:30px;cursor:pointer;font-size:13px;" onclick="goFeed()">← Назад</button>
             </div>
-            <div class="chat-box" id="dcMessages"></div>
-            <!-- ADMIN PUBLISH IN CHAT -->
-            <div id="dcAdminBar" class="hidden" style="background:#0f0f0f;border:1px solid #2a2a2a;border-radius:8px;padding:8px;margin-bottom:6px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <span style="color:#ff8c00;font-weight:bold;">✏️ Опубликовать пост</span>
-                    <button class="btn" onclick="toggleAdminForm()">▼ Открыть</button>
+            <div class="chat-panel">
+                <div class="chat-messages" id="dcMessages"></div>
+
+                <!-- admin publish bar -->
+                <div class="admin-bar" id="dcAdminBar">
+                    <div class="bar-header">
+                        <span>✏️ Опубликовать пост</span>
+                        <button onclick="toggleAdminForm()">▼ Открыть</button>
+                    </div>
+                    <div class="admin-form" id="dcAdminForm">
+                        <input type="text" id="apMarquee" placeholder="📢 Бегущая строка">
+                        <textarea id="apText" placeholder="📝 Текст поста..."></textarea>
+                        <input type="url" id="apLink" placeholder="🔗 Ссылка (iframe)">
+                        <input type="text" id="apHashtags" placeholder="#хештеги через пробел">
+                        <div style="color:#888;font-size:12px;">🔘 Кнопки</div>
+                        <div id="apBtns"></div>
+                        <button class="aadd" onclick="apAddBtn()">➕ Кнопку</button>
+                        <button class="apublish" onclick="apPublish()">📤 Опубликовать</button>
+                    </div>
                 </div>
-                <div id="dcAdminForm" style="display:none;margin-top:6px;">
-                    <input type="text" id="apMarquee" placeholder="📢 Бегущая строка">
-                    <textarea id="apText" placeholder="📝 Текст поста"></textarea>
-                    <input type="url" id="apLink" placeholder="🔗 Ссылка (iframe)">
-                    <input type="text" id="apHashtags" placeholder="#хештеги через пробел">
-                    <div style="color:#888;font-size:12px;">Кнопки</div>
-                    <div id="apBtns"></div>
-                    <button class="btn" onclick="apAddBtn()">➕ Кнопку</button>
-                    <button class="btn btn-primary" style="margin-top:4px;" onclick="apPublish()">📤 Опубликовать</button>
-                </div>
-            </div>
-            <!-- INPUT -->
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
-                <input type="text" id="dcInput" placeholder="Сообщение..." style="flex:1;">
-                <button class="btn btn-primary" onclick="dcSend()">→</button>
-            </div>
-            <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;align-items:center;">
-                <label class="btn" for="dcFile">📎 фото</label>
-                <input type="file" id="dcFile" accept="image/*" style="display:none;">
-                <div id="dcPreview" style="display:none;align-items:center;gap:4px;background:#0f0f0f;padding:2px 8px 2px 2px;border-radius:30px;border:1px solid #333;">
-                    <img id="dcPreviewImg" src="" style="width:24px;height:24px;border-radius:30px;object-fit:cover;">
-                    <span id="dcPreviewName" style="font-size:11px;"></span>
-                    <button class="btn btn-danger" onclick="dcRemoveImg()">✕</button>
+
+                <!-- user input -->
+                <div class="chat-input-wrap">
+                    <div class="chat-input-row">
+                        <input type="text" id="dcInput" placeholder="Напиши сообщение...">
+                        <button onclick="dcSend()">→</button>
+                    </div>
+                    <div class="chat-file-row">
+                        <label for="dcFile">📎 фото</label>
+                        <input type="file" id="dcFile" accept="image/*" style="display:none;">
+                        <div class="preview" id="dcPreview">
+                            <img id="dcPreviewImg" src="">
+                            <span class="name" id="dcPreviewName"></span>
+                            <button class="remove" onclick="dcRemoveImg()">✕</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ADMIN DOTS -->
-    <div style="position:fixed;bottom:8px;right:8px;display:flex;gap:6px;z-index:50;">
-        <span class="admin-dot" id="feedDot" onclick="openFeedLogin()" title="Лента"></span>
-        <span class="admin-dot" id="roomDot" onclick="openRoomLogin()" title="Комнаты"></span>
-    </div>
+</div>
 
-    <!-- MODALS -->
-    <div class="modal" id="feedLoginModal">
-        <div class="modal-box">
-            <h3>📰 Вход (Лента)</h3>
-            <p style="color:#888;font-size:13px;">Пароль для управления лентой</p>
-            <input type="password" id="feedPass" placeholder="Пароль">
-            <div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end;">
-                <button class="btn" onclick="closeModal('feedLoginModal')">Отмена</button>
-                <button class="btn btn-primary" onclick="checkFeedPass()">Войти</button>
-            </div>
+<!-- ADMIN DOTS -->
+<div class="admin-dots">
+    <div class="admin-dot feed-dot" id="feedDot" onclick="openFeedLogin()"></div>
+    <div class="admin-dot room-dot" id="roomDot" onclick="openRoomLogin()"></div>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="feedLoginModal">
+    <div class="modal-box">
+        <h3>📰 Вход (Лента)</h3>
+        <div class="sub">Пароль для управления лентой</div>
+        <input type="password" id="feedPass" placeholder="Пароль...">
+        <div class="mbtns">
+            <button class="cancel" onclick="closeModal('feedLoginModal')">Отмена</button>
+            <button class="save orange" onclick="checkFeedPass()">Войти</button>
         </div>
     </div>
+</div>
 
-    <div class="modal" id="roomLoginModal">
-        <div class="modal-box">
-            <h3>💬 Вход (Комнаты)</h3>
-            <p style="color:#888;font-size:13px;">Пароль для управления комнатами</p>
-            <input type="password" id="roomPass" placeholder="Пароль">
-            <div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end;">
-                <button class="btn" onclick="closeModal('roomLoginModal')">Отмена</button>
-                <button class="btn btn-primary" onclick="checkRoomPass()">Войти</button>
-            </div>
+<div class="modal" id="roomLoginModal">
+    <div class="modal-box">
+        <h3>💬 Вход (Комнаты)</h3>
+        <div class="sub">Пароль для управления комнатами</div>
+        <input type="password" id="roomPass" placeholder="Пароль...">
+        <div class="mbtns">
+            <button class="cancel" onclick="closeModal('roomLoginModal')">Отмена</button>
+            <button class="save" onclick="checkRoomPass()">Войти</button>
         </div>
     </div>
+</div>
 
-    <div class="modal" id="createRoomModal">
-        <div class="modal-box">
-            <h3>📝 Новая комната</h3>
-            <p style="color:#888;font-size:13px;">Введите название</p>
-            <input type="text" id="roomNameInput" placeholder="Название">
-            <div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end;">
-                <button class="btn" onclick="closeModal('createRoomModal')">Отмена</button>
-                <button class="btn btn-primary" onclick="doCreateRoom()">Создать</button>
-            </div>
+<div class="modal" id="createRoomModal">
+    <div class="modal-box">
+        <h3>📝 Новая комната</h3>
+        <div class="sub">Введите название</div>
+        <input type="text" id="roomNameInput" placeholder="Например: Общий..." maxlength="30">
+        <div class="mbtns">
+            <button class="cancel" onclick="closeModal('createRoomModal')">Отмена</button>
+            <button class="save" onclick="doCreateRoom()">Создать</button>
         </div>
     </div>
+</div>
 
-    <!-- EDIT MODAL -->
-    <div class="modal" id="editOverlay">
-        <div class="modal-box">
-            <h2 style="color:#ff8c00;">✏️ Редактировать</h2>
-            <input type="text" id="editMarquee" placeholder="Бегущая строка">
-            <textarea id="editText" placeholder="Текст"></textarea>
-            <input type="url" id="editLink" placeholder="Ссылка (iframe)">
-            <input type="text" id="editHashtags" placeholder="#хештеги через пробел">
-            <div style="color:#888;font-size:12px;">Кнопки</div>
-            <div id="editBtns"></div>
-            <button class="btn" onclick="editAddBtn()">➕ Кнопку</button>
-            <div style="display:flex;gap:6px;margin-top:8px;">
-                <button class="btn btn-primary" style="flex:1;" onclick="doSaveEdit()">💾 Сохранить</button>
-                <button class="btn" style="flex:1;" onclick="closeEdit()">✕ Отмена</button>
-            </div>
-            <button class="btn btn-danger" style="width:100%;margin-top:6px;" onclick="doDeleteEdit()">🗑 Удалить</button>
+<!-- EDIT MODAL -->
+<div class="edit-overlay" id="editOverlay">
+    <div class="edit-box">
+        <h2>✏️ Редактировать</h2>
+        <input type="text" id="editMarquee" placeholder="Бегущая строка">
+        <textarea id="editText" placeholder="Текст..."></textarea>
+        <input type="url" id="editLink" placeholder="Ссылка (iframe)">
+        <input type="text" id="editHashtags" placeholder="#хештеги через пробел">
+        <div style="color:#888;font-size:12px;margin:3px 0;">Кнопки</div>
+        <div id="editBtns"></div>
+        <button onclick="editAddBtn()" style="background:#3a3b3c;border:0;color:#ff8c00;padding:2px 14px;border-radius:30px;cursor:pointer;font-size:13px;margin-bottom:4px;">➕ Кнопку</button>
+        <div class="eactions">
+            <button class="save" onclick="doSaveEdit()">💾 Сохранить</button>
+            <button class="close" onclick="closeEdit()">✕ Отмена</button>
         </div>
+        <button class="edelete" onclick="doDeleteEdit()">🗑 Удалить</button>
     </div>
-
 </div>
 
 <!-- =============================================================== -->
 <script>
 (function(){
-    // ── FIREBASE ──
-    const FB_CONFIG = {
-        apiKey:"AIzaSyC81Ow4VPAUcaQGAuJjhtA-OaR8hyqxCtI",
-        authDomain:"mychatapp-2c141.firebaseapp.com",
-        databaseURL:"https://mychatapp-2c141-default-rtdb.firebaseio.com",
-        projectId:"mychatapp-2c141",
-        storageBucket:"mychatapp-2c141.firebasestorage.app",
-        messagingSenderId:"857322151793",
-        appId:"1:857322151793:web:387599e9e6f9cf1454a0d0"
-    };
-    const app = firebase.initializeApp(FB_CONFIG);
-    const db = firebase.database(app);
-    const SITE = (window.location.hostname||'local').replace(/\./g,'_');
 
-    // ── USER ──
-    let USER = localStorage.getItem('dc_u_'+SITE) || '';
-    let IS_FEED_ADMIN = localStorage.getItem('dc_fa_'+SITE) === '1';
-    let IS_ROOM_ADMIN = localStorage.getItem('dc_ra_'+SITE) === '1';
-    let CUR_ROOM = '';
-    let FEED_EDIT_ID = null;
-    let CHAT_EDIT_ID = null;
-    let DC_IMG = null;
-    let chatUnsub = null;
+// ── FIREBASE ──
+const FB_CONFIG = {
+    apiKey:"AIzaSyC81Ow4VPAUcaQGAuJjhtA-OaR8hyqxCtI",
+    authDomain:"mychatapp-2c141.firebaseapp.com",
+    databaseURL:"https://mychatapp-2c141-default-rtdb.firebaseio.com",
+    projectId:"mychatapp-2c141",
+    storageBucket:"mychatapp-2c141.firebasestorage.app",
+    messagingSenderId:"857322151793",
+    appId:"1:857322151793:web:387599e9e6f9cf1454a0d0"
+};
+const fbApp = firebase.initializeApp(FB_CONFIG);
+const db = firebase.database(fbApp);
+const SITE = (window.location.hostname||'local').replace(/\./g,'_');
 
-    if(!USER){
-        const n = prompt('👤 Ваше имя:');
-        USER = (n && n.trim()) ? n.trim().slice(0,24) : 'Гость';
-        localStorage.setItem('dc_u_'+SITE, USER);
+// ── USER ──
+let USER = localStorage.getItem('dc_u_'+SITE)||'';
+let IS_FEED_ADMIN = localStorage.getItem('dc_fa_'+SITE)==='1';
+let IS_ROOM_ADMIN = localStorage.getItem('dc_ra_'+SITE)==='1';
+let CUR_ROOM = '';
+let FEED_EDIT_ID = null;
+let CHAT_EDIT_ID = null;
+let DC_IMG = null;
+let chatUnsub = null;
+
+if(!USER){
+    const n = prompt('👤 Ваше имя:');
+    USER = (n&&n.trim()) ? n.trim().slice(0,24) : 'Гость';
+    localStorage.setItem('dc_u_'+SITE, USER);
+}
+document.getElementById('hdrUser').textContent='👤 '+USER;
+document.getElementById('sbUserName').textContent=USER;
+
+function applyAdminUI(){
+    if(IS_FEED_ADMIN){
+        document.getElementById('hdrFeedBadge').classList.add('show');
+        document.getElementById('feedDot').classList.add('active');
+        document.getElementById('feedForm').classList.add('show');
     }
-    document.getElementById('hdrUser').textContent = '👤 '+USER;
-    document.getElementById('sbUserName').textContent = USER;
-
-    function applyAdminUI(){
-        if(IS_FEED_ADMIN){
-            document.getElementById('hdrFeedBadge').classList.remove('hidden');
-            document.getElementById('feedDot').classList.add('active');
-            document.getElementById('feedForm').classList.remove('hidden');
-        }
-        if(IS_ROOM_ADMIN){
-            document.getElementById('hdrRoomBadge').classList.remove('hidden');
-            document.getElementById('roomDot').classList.add('active');
-            document.getElementById('createRoomBtn').classList.remove('hidden');
-            document.getElementById('dcAdminBar').classList.remove('hidden');
-        }
+    if(IS_ROOM_ADMIN){
+        document.getElementById('hdrRoomBadge').classList.add('show');
+        document.getElementById('roomDot').classList.add('active');
+        document.getElementById('createRoomBtn').classList.add('show');
+        document.getElementById('dcAdminBar').classList.add('show');
     }
-    applyAdminUI();
+}
+applyAdminUI();
 
-    const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const now = () => new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+// ── UTILS ──
+const esc=s=>s?String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])):'';
+const now=()=>new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
-    // ── SIDEBAR ──
-    window.toggleSidebar = function(){
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('overlay').classList.toggle('open');
-    };
+// ── SIDEBAR ──
+window.toggleSidebar=function(){
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+};
+function closeSidebar(){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+}
 
-    // ── NAV ──
-    window.goFeed = function(){
-        document.getElementById('feedSection').style.display = 'block';
-        document.getElementById('chatSection').style.display = 'none';
-        CUR_ROOM = '';
-        document.querySelectorAll('.room-item').forEach(el => el.classList.remove('active'));
-        toggleSidebar();
-    };
-    window.goRooms = function(){
-        toggleSidebar();
-        if(!CUR_ROOM) alert('💬 Выберите комнату из списка');
-    };
+// ── NAV ──
+window.goFeed=function(){
+    document.getElementById('feedSection').style.display='block';
+    document.getElementById('chatSection').style.display='none';
+    CUR_ROOM='';
+    document.querySelectorAll('.room-item').forEach(el=>el.classList.remove('active'));
+    closeSidebar();
+};
+window.goRooms=function(){
+    closeSidebar();
+    if(!CUR_ROOM) alert('💬 Выберите комнату из списка');
+};
 
-    // ── ROOMS ──
-    db.ref('sites/'+SITE+'/rooms').orderByChild('createdAt').on('value', snap => {
-        const data = snap.val() || {};
-        const keys = Object.keys(data).sort((a,b) => (data[a].createdAt||0) - (data[b].createdAt||0));
-        const list = document.getElementById('roomList');
-        if(!keys.length){ list.innerHTML = '<span style="color:#444;">Нет комнат</span>'; return; }
-        list.innerHTML = keys.map(k => {
-            const r = data[k];
-            const ac = k === CUR_ROOM ? 'active' : '';
-            return `<span class="room-item ${ac}" onclick="openRoom('${k}','${esc(r.name||'?')}')"># ${esc(r.name||'?')} <span style="color:#666;font-size:11px;">${r.count||0}</span></span>`;
-        }).join(' ');
+// ── ROOM LIST ──
+db.ref('sites/'+SITE+'/rooms').orderByChild('createdAt').on('value',snap=>{
+    const data=snap.val()||{};
+    const keys=Object.keys(data).sort((a,b)=>(data[a].createdAt||0)-(data[b].createdAt||0));
+    const list=document.getElementById('roomList');
+    if(!keys.length){list.innerHTML='<div style="color:#555;padding:8px;">Нет комнат</div>';return;}
+    list.innerHTML=keys.map(k=>{
+        const r=data[k];
+        const ac=k===CUR_ROOM?'active':'';
+        return `<div class="room-item ${ac}" data-room="${k}" onclick="openRoom('${k}','${esc(r.name||'Комната')}')"># ${esc(r.name||'?')}<span class="room-count">${r.count||0}</span></div>`;
+    }).join('');
+});
+
+// ── OPEN ROOM ──
+window.openRoom=function(roomId,roomName){
+    CUR_ROOM=roomId;
+    document.getElementById('feedSection').style.display='none';
+    document.getElementById('chatSection').style.display='block';
+    document.getElementById('chatRoomLabel').textContent='💬 '+(roomName||'Комната');
+    document.querySelectorAll('.room-item').forEach(el=>el.classList.toggle('active',el.dataset.room===roomId));
+    closeSidebar();
+    loadChat(roomId);
+};
+
+window.openPostRoom=function(postId,title){
+    openRoom('post_'+postId,'💬 '+(title||'Обсуждение'));
+};
+
+// ── CREATE ROOM ──
+window.openCreateRoom=function(){
+    if(!IS_ROOM_ADMIN){alert('⛔ Только для админа!');return;}
+    document.getElementById('createRoomModal').classList.add('open');
+    document.getElementById('roomNameInput').value='';
+    document.getElementById('roomNameInput').focus();
+};
+window.doCreateRoom=function(){
+    const name=document.getElementById('roomNameInput').value.trim();
+    if(!name||name.length<2){alert('⚠️ Минимум 2 символа');return;}
+    db.ref('sites/'+SITE+'/rooms').push({name,createdAt:Date.now(),count:0})
+        .then(()=>closeModal('createRoomModal'))
+        .catch(e=>alert('❌ '+e.message));
+};
+
+// ── ADMIN LOGIN ──
+window.openFeedLogin=function(){document.getElementById('feedLoginModal').classList.add('open');document.getElementById('feedPass').value='';document.getElementById('feedPass').focus();};
+window.openRoomLogin=function(){document.getElementById('roomLoginModal').classList.add('open');document.getElementById('roomPass').value='';document.getElementById('roomPass').focus();};
+window.checkFeedPass=function(){
+    if(document.getElementById('feedPass').value.trim()==='12345'){
+        IS_FEED_ADMIN=true;localStorage.setItem('dc_fa_'+SITE,'1');
+        applyAdminUI();closeModal('feedLoginModal');loadFeed();
+    }else alert('❌ Неверный пароль!');
+};
+window.checkRoomPass=function(){
+    if(document.getElementById('roomPass').value.trim()==='12345'){
+        IS_ROOM_ADMIN=true;localStorage.setItem('dc_ra_'+SITE,'1');
+        applyAdminUI();closeModal('roomLoginModal');
+    }else alert('❌ Неверный пароль!');
+};
+window.closeModal=function(id){document.getElementById(id).classList.remove('open');};
+
+// ═══════════════════════════════════════════
+// ══  FEED  ══════════════════════════════════
+// ═══════════════════════════════════════════
+
+function loadFeed(){
+    db.ref('sites/'+SITE+'/feed_posts').orderByChild('timestamp').on('value',snap=>{
+        const c=document.getElementById('feedPosts');
+        c.innerHTML='';
+        const data=snap.val()||{};
+        const keys=Object.keys(data).sort((a,b)=>(data[b].timestamp||0)-(data[a].timestamp||0));
+        if(!keys.length){
+            c.innerHTML='<div style="text-align:center;padding:40px;color:#555;">📭 Пока пусто</div>';
+            return;
+        }
+        keys.forEach(k=>{const p=data[k];p.id=k;c.appendChild(renderFeedPost(p));});
     });
+}
 
-    window.openRoom = function(roomId, roomName){
-        CUR_ROOM = roomId;
-        document.getElementById('feedSection').style.display = 'none';
-        document.getElementById('chatSection').style.display = 'block';
-        document.getElementById('chatRoomLabel').textContent = '💬 '+(roomName||'Комната');
-        document.querySelectorAll('.room-item').forEach(el => el.classList.toggle('active', el.getAttribute('onclick').includes(roomId)));
-        toggleSidebar();
-        loadChat(roomId);
-    };
-
-    window.openPostRoom = function(postId, title){
-        openRoom('post_'+postId, '💬 '+(title||'Обсуждение'));
-    };
-
-    // ── CREATE ROOM ──
-    window.openCreateRoom = function(){
-        if(!IS_ROOM_ADMIN){ alert('⛔ Только для админа!'); return; }
-        document.getElementById('createRoomModal').classList.add('open');
-        document.getElementById('roomNameInput').value = '';
-        document.getElementById('roomNameInput').focus();
-    };
-    window.doCreateRoom = function(){
-        const name = document.getElementById('roomNameInput').value.trim();
-        if(!name || name.length < 2){ alert('⚠️ Минимум 2 символа'); return; }
-        db.ref('sites/'+SITE+'/rooms').push({ name, createdAt: Date.now(), count: 0 })
-            .then(() => closeModal('createRoomModal'))
-            .catch(e => alert('❌ '+e.message));
-    };
-
-    // ── ADMIN LOGIN ──
-    window.openFeedLogin = function(){ document.getElementById('feedLoginModal').classList.add('open'); document.getElementById('feedPass').value=''; document.getElementById('feedPass').focus(); };
-    window.openRoomLogin = function(){ document.getElementById('roomLoginModal').classList.add('open'); document.getElementById('roomPass').value=''; document.getElementById('roomPass').focus(); };
-    window.checkFeedPass = function(){
-        if(document.getElementById('feedPass').value.trim() === '12345'){
-            IS_FEED_ADMIN = true; localStorage.setItem('dc_fa_'+SITE,'1');
-            applyAdminUI(); closeModal('feedLoginModal'); loadFeed();
-        } else alert('❌ Неверный пароль!');
-    };
-    window.checkRoomPass = function(){
-        if(document.getElementById('roomPass').value.trim() === '12345'){
-            IS_ROOM_ADMIN = true; localStorage.setItem('dc_ra_'+SITE,'1');
-            applyAdminUI(); closeModal('roomLoginModal');
-        } else alert('❌ Неверный пароль!');
-    };
-    window.closeModal = function(id){ document.getElementById(id).classList.remove('open'); };
-
-    // ═══════════════════════════════════════════
-    // ══  FEED  ══════════════════════════════════
-    // ═══════════════════════════════════════════
-
-    function loadFeed(){
-        db.ref('sites/'+SITE+'/feed_posts').orderByChild('timestamp').on('value', snap => {
-            const c = document.getElementById('feedPosts');
-            c.innerHTML = '';
-            const data = snap.val() || {};
-            const keys = Object.keys(data).sort((a,b) => (data[b].timestamp||0) - (data[a].timestamp||0));
-            if(!keys.length){
-                c.innerHTML = '<div style="text-align:center;padding:30px;color:#444;">📭 Пока пусто</div>';
-                return;
-            }
-            keys.forEach(k => { const p = data[k]; p.id = k; c.appendChild(renderFeedPost(p)); });
-        });
+function renderFeedPost(p){
+    const d=document.createElement('div');
+    d.className='post';
+    const mq=p.marquee?`<div class="marquee"><span>${esc(p.marquee)}</span></div>`:'';
+    const img=p.img?`<img class="post-img" src="${esc(p.img)}" onclick="window.open(this.src)">`:'';
+    const fr=p.link?`<div class="post-frame"><iframe src="${esc(p.link)}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>`:'';
+    let btns='';
+    if(p.buttons&&p.buttons.length){
+        btns='<div class="post-buttons">'+p.buttons.filter(b=>b.url).map(b=>`<a href="${esc(b.url)}" target="_blank">${esc(b.label||'🔗 Перейти')}</a>`).join('')+'</div>';
     }
-
-    function renderFeedPost(p){
-        const d = document.createElement('div');
-        d.className = 'post';
-        const mq = p.marquee ? `<div class="marquee"><span>${esc(p.marquee)}</span></div>` : '';
-        const img = p.img ? `<img class="img-preview" src="${esc(p.img)}" onclick="window.open(this.src)">` : '';
-        const fr = p.link ? `<div class="post-frame"><iframe src="${esc(p.link)}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>` : '';
-        let btns = '';
-        if(p.buttons && p.buttons.length){
-            btns = '<div style="display:flex;flex-wrap:wrap;gap:4px;margin:6px 0;">' + p.buttons.filter(b=>b.url).map(b => `<a href="${esc(b.url)}" target="_blank" style="background:#ff8c00;color:#111;padding:4px 12px;border-radius:30px;text-decoration:none;font-weight:bold;">${esc(b.label||'🔗')}</a>`).join('') + '</div>';
-        }
-        let tags = '';
-        if(p.hashtags && p.hashtags.length){
-            tags = '<div>' + p.hashtags.map(t => `<span class="post-tag">${esc(t)}</span>`).join('') + '</div>';
-        }
-        let acts = '';
-        if(IS_FEED_ADMIN){
-            acts = `<div class="post-actions"><button class="btn" onclick="feedOpenEdit('${p.id}')">✏️ Ред.</button><button class="btn btn-danger" onclick="feedDel('${p.id}')">🗑</button></div>`;
-        }
-        d.innerHTML = `${mq}
-            <div style="display:flex;justify-content:space-between;"><span class="post-author">${esc(p.author||'Аноним')}</span><span class="post-time">${p.time||''}${p.edited ? ' <span style="color:#555;">(ред.)</span>' : ''}</span></div>
-            <div class="post-text">${esc(p.text||'')}</div>
-            ${img}${btns}${fr}${tags}
-            <div class="post-actions">
-                <button class="btn" onclick="openPostRoom('${p.id}','${esc((p.text||'Пост').slice(0,28))}')">💬 Обсудить</button>
-                ${acts}
-            </div>`;
-        return d;
+    let tags='';
+    if(p.hashtags&&p.hashtags.length){
+        tags='<div class="post-tags">'+p.hashtags.map(t=>`<span>${esc(t)}</span>`).join('')+'</div>';
     }
-
-    // feed form
-    window.fAddBtn = function(l='', u=''){
-        const c = document.getElementById('fBtns');
-        const d = document.createElement('div');
-        d.style.cssText = 'display:flex;gap:4px;margin:2px 0;';
-        d.innerHTML = `<input placeholder="Текст" value="${esc(l)}" style="flex:1;"><input placeholder="Ссылка" value="${esc(u)}" style="flex:1;"><button class="btn btn-danger" onclick="this.parentElement.remove()">✕</button>`;
-        c.appendChild(d);
-    };
-    window.fSubmit = function(){
-        const marquee = document.getElementById('fMarquee').value.trim();
-        const text = document.getElementById('fText').value.trim();
-        const link = document.getElementById('fLink').value.trim();
-        const hr = document.getElementById('fHashtags').value.trim();
-        const hashtags = hr ? hr.split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5) : [];
-        if(!text && !link){ alert('⚠️ Введите текст или ссылку'); return; }
-        const buttons = [];
-        document.querySelectorAll('#fBtns > div').forEach(g => {
-            const [li, ui] = g.querySelectorAll('input');
-            if(ui.value.trim()) buttons.push({ label: li.value.trim()||'🔗 Перейти', url: ui.value.trim() });
-        });
-        const post = { author: USER, text: text||'📝', time: now(), timestamp: Date.now(), marquee: marquee||null, link: link||null, buttons, hashtags, img: null, edited: false };
-        const ref = db.ref('sites/'+SITE+'/feed_posts');
-        if(FEED_EDIT_ID){
-            ref.child(FEED_EDIT_ID).update({ ...post, edited: true, editedAt: Date.now() }).then(fCancel);
-        } else {
-            ref.push(post).then(fCancel);
-        }
-    };
-    window.fCancel = function(){
-        ['fMarquee','fText','fLink','fHashtags'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('fBtns').innerHTML = '';
-        document.getElementById('fSubmitBtn').textContent = '📤 Опубликовать';
-        FEED_EDIT_ID = null;
-    };
-    window.feedOpenEdit = function(id){
-        FEED_EDIT_ID = id;
-        db.ref('sites/'+SITE+'/feed_posts/'+id).once('value', snap => {
-            const p = snap.val(); if(!p) return;
-            document.getElementById('fMarquee').value = p.marquee||'';
-            document.getElementById('fText').value = p.text||'';
-            document.getElementById('fLink').value = p.link||'';
-            document.getElementById('fHashtags').value = (p.hashtags||[]).join(' ');
-            document.getElementById('fBtns').innerHTML = '';
-            (p.buttons||[]).forEach(b => fAddBtn(b.label, b.url));
-            document.getElementById('fSubmitBtn').textContent = '💾 Обновить';
-            document.getElementById('feedForm').classList.remove('hidden');
-            document.getElementById('feedForm').scrollIntoView({ behavior: 'smooth' });
-        });
-    };
-    window.feedDel = function(id){
-        if(!confirm('🗑 Удалить пост?')) return;
-        db.ref('sites/'+SITE+'/feed_posts/'+id).remove();
-    };
-
-    // ═══════════════════════════════════════════
-    // ══  CHAT  ══════════════════════════════════
-    // ═══════════════════════════════════════════
-
-    function chatPath(roomId){ return 'rooms/'+SITE+'_'+roomId+'/messages'; }
-
-    function loadChat(roomId){
-        if(chatUnsub){ db.ref(chatUnsub).off('value'); chatUnsub = null; }
-        DC_IMG = null;
-        document.getElementById('dcPreview').style.display = 'none';
-        document.getElementById('dcInput').value = '';
-        const box = document.getElementById('dcMessages');
-        box.innerHTML = '<div style="color:#555;text-align:center;padding:20px;">⏳ Загрузка...</div>';
-        const path = chatPath(roomId);
-        chatUnsub = path;
-        db.ref(path).orderByChild('timestamp').on('value', snap => {
-            box.innerHTML = '';
-            if(!snap.exists()){
-                box.innerHTML = '<div style="color:#444;text-align:center;padding:28px;">Сообщений нет. Напишите первым!</div>';
-                return;
-            }
-            snap.forEach(s => { const m = s.val(); m.id = s.key; box.appendChild(renderChatMsg(m, roomId)); });
-            box.scrollTop = box.scrollHeight;
-        });
+    let acts='';
+    if(IS_FEED_ADMIN){
+        acts=`<button class="btn" onclick="feedOpenEdit('${p.id}')">✏️ Ред.</button><button class="btn btn-danger" onclick="feedDel('${p.id}')">🗑</button>`;
     }
+    d.innerHTML=`${mq}
+        <div class="post-header"><span class="post-author">${esc(p.author||'Аноним')}</span><span class="post-time">${p.time||''}${p.edited?' <span style="color:#555;font-size:11px;">(ред.)</span>':''}</span></div>
+        <div class="post-text">${esc(p.text||'')}</div>
+        ${img}${btns}${fr}${tags}
+        <div class="post-actions">
+            <button class="btn" onclick="openPostRoom('${p.id}','${esc((p.text||'Пост').slice(0,28))}')">💬 Обсудить</button>
+            ${acts}
+        </div>`;
+    return d;
+}
 
-    function renderChatMsg(m, roomId){
-        const d = document.createElement('div');
-        d.className = 'msg';
-        const isPost = m.isPost || m.marquee || (m.buttons && m.buttons.length);
-        const mq = (isPost && m.marquee) ? `<div class="marquee"><span>${esc(m.marquee)}</span></div>` : '';
-        const img = m.img ? `<img class="img-preview" src="${esc(m.img)}" onclick="window.open(this.src)">` : '';
-        const fr = (isPost && m.link) ? `<div class="post-frame"><iframe src="${esc(m.link)}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>` : '';
-        let btns = '';
-        if(isPost && m.buttons && m.buttons.length){
-            btns = '<div style="display:flex;flex-wrap:wrap;gap:4px;margin:4px 0;">' + m.buttons.filter(b=>b.url).map(b => `<a href="${esc(b.url)}" target="_blank" style="background:#ff8c00;color:#111;padding:2px 12px;border-radius:30px;text-decoration:none;font-weight:bold;">${esc(b.label||'🔗')}</a>`).join('') + '</div>';
-        }
-        let tags = '';
-        if(isPost && m.hashtags && m.hashtags.length){
-            tags = '<div>' + m.hashtags.map(t => `<span class="post-tag">${esc(t)}</span>`).join('') + '</div>';
-        }
-        let txt = esc(m.text||'');
-        if(!isPost){
-            const lm = (m.text||'').match(/(https?:\/\/[^\s]+)/);
-            if(lm) txt = txt.replace(esc(lm[1]), `<span style="color:#66aaff;text-decoration:underline;">${esc(lm[1])}</span>`);
-        }
-        let acts = `<button class="btn" onclick="dcLike('${m.id}','${roomId}')">👍 ${m.likes||0}</button><button class="btn" onclick="dcReply('${esc(m.nick)}')">💬</button>`;
-        if(m.nick === USER || IS_ROOM_ADMIN){
-            acts += `<button class="btn" onclick="openChatEdit('${m.id}','${roomId}')">✏️</button>`;
-            acts += `<button class="btn btn-danger" onclick="dcDel('${m.id}','${roomId}')">🗑</button>`;
-        }
-        d.innerHTML = `${mq}
-            <div><span class="msg-author">${esc(m.nick||'?')}</span><span class="msg-time">${m.time||''}${m.edited ? ' <span style="color:#555;">(ред.)</span>' : ''}</span></div>
-            <div>${txt}</div>
-            ${img}${btns}${fr}${tags}
-            <div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;">${acts}</div>`;
-        return d;
-    }
-
-    // send user msg
-    window.dcSend = function(){
-        if(!CUR_ROOM) return;
-        const input = document.getElementById('dcInput');
-        const text = input.value.trim();
-        if(!text && !DC_IMG) return;
-        db.ref(chatPath(CUR_ROOM)).push({ nick: USER, text: text||'📷', time: now(), timestamp: Date.now(), likes: 0, img: DC_IMG||null, edited: false, isPost: false });
-        input.value = ''; dcRemoveImg();
-    };
-    document.getElementById('dcInput').addEventListener('keypress', e => { if(e.key === 'Enter') dcSend(); });
-
-    // image
-    document.getElementById('dcFile').addEventListener('change', function(e){
-        const f = e.target.files[0];
-        if(!f || !f.type.startsWith('image/')) return;
-        if(f.size > 2*1024*1024){ alert('Максимум 2MB'); return; }
-        const r = new FileReader();
-        r.onload = ev => {
-            DC_IMG = ev.target.result;
-            document.getElementById('dcPreviewImg').src = DC_IMG;
-            document.getElementById('dcPreviewName').textContent = f.name.slice(0,12);
-            document.getElementById('dcPreview').style.display = 'flex';
-        };
-        r.readAsDataURL(f);
+// feed form
+window.fAddBtn=function(l='',u=''){
+    const c=document.getElementById('fBtns');
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;gap:4px;margin:2px 0;';
+    d.innerHTML=`<input placeholder="Текст" value="${esc(l)}" style="flex:1;"><input placeholder="Ссылка" value="${esc(u)}" style="flex:1;"><button class="btn btn-danger" style="background:#5c1a1a;border:0;color:#ff8888;padding:0 10px;border-radius:30px;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+    c.appendChild(d);
+};
+window.fSubmit=function(){
+    const marquee=document.getElementById('fMarquee').value.trim();
+    const text=document.getElementById('fText').value.trim();
+    const link=document.getElementById('fLink').value.trim();
+    const hr=document.getElementById('fHashtags').value.trim();
+    const hashtags=hr?hr.split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5):[];
+    if(!text&&!link){alert('⚠️ Введите текст или ссылку');return;}
+    const buttons=[];
+    document.querySelectorAll('#fBtns > div').forEach(g=>{
+        const[li,ui]=g.querySelectorAll('input');
+        if(ui.value.trim()) buttons.push({label:li.value.trim()||'🔗 Перейти',url:ui.value.trim()});
     });
-    window.dcRemoveImg = function(){ DC_IMG = null; document.getElementById('dcPreview').style.display = 'none'; document.getElementById('dcFile').value = ''; };
-
-    // like / reply / delete
-    window.dcLike = function(id, roomId){
-        const key = 'lk_'+id+'_'+USER;
-        if(localStorage.getItem(key)) return;
-        db.ref(chatPath(roomId)+'/'+id+'/likes').transaction(v => (v||0)+1);
-        localStorage.setItem(key,'1');
-    };
-    window.dcReply = function(nick){ const i = document.getElementById('dcInput'); i.value = '@'+nick+' '; i.focus(); };
-    window.dcDel = function(id, roomId){ if(!confirm('Удалить?')) return; db.ref(chatPath(roomId)+'/'+id).remove(); };
-
-    // ── ADMIN PUBLISH in chat ──
-    window.toggleAdminForm = function(){
-        const f = document.getElementById('dcAdminForm');
-        const btn = document.querySelector('#dcAdminBar .btn');
-        const open = f.style.display === 'none';
-        f.style.display = open ? 'block' : 'none';
-        btn.textContent = open ? '▲ Закрыть' : '▼ Открыть';
-    };
-    window.apAddBtn = function(l='', u=''){
-        const c = document.getElementById('apBtns');
-        const d = document.createElement('div');
-        d.style.cssText = 'display:flex;gap:4px;margin:2px 0;';
-        d.innerHTML = `<input placeholder="Текст" value="${esc(l)}" style="flex:1;"><input placeholder="Ссылка" value="${esc(u)}" style="flex:1;"><button class="btn btn-danger" onclick="this.parentElement.remove()">✕</button>`;
-        c.appendChild(d);
-    };
-    window.apPublish = function(){
-        if(!CUR_ROOM){ alert('Сначала откройте комнату'); return; }
-        const marquee = document.getElementById('apMarquee').value.trim();
-        const text = document.getElementById('apText').value.trim();
-        const link = document.getElementById('apLink').value.trim();
-        const hr = document.getElementById('apHashtags').value.trim();
-        const hashtags = hr ? hr.split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5) : [];
-        if(!marquee && !text && !link){ alert('⚠️ Заполните хотя бы одно поле'); return; }
-        const buttons = [];
-        document.querySelectorAll('#apBtns > div').forEach(g => {
-            const [li, ui] = g.querySelectorAll('input');
-            if(ui.value.trim()) buttons.push({ label: li.value.trim()||'🔗 Перейти', url: ui.value.trim() });
-        });
-        db.ref(chatPath(CUR_ROOM)).push({
-            nick: USER, text: text||marquee||'📋', time: now(), timestamp: Date.now(),
-            likes: 0, marquee: marquee||null, link: link||null, buttons, hashtags, img: null, isPost: true, edited: false
-        }).then(() => {
-            ['apMarquee','apText','apLink','apHashtags'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('apBtns').innerHTML = '';
-            document.getElementById('dcAdminForm').style.display = 'none';
-            document.querySelector('#dcAdminBar .btn').textContent = '▼ Открыть';
-        });
-    };
-
-    // ── EDIT MODAL (chat) ──
-    window.openChatEdit = function(msgId, roomId){
-        CHAT_EDIT_ID = { msgId, roomId };
-        db.ref(chatPath(roomId)+'/'+msgId).once('value', snap => {
-            const m = snap.val(); if(!m) return;
-            document.getElementById('editMarquee').value = m.marquee||'';
-            document.getElementById('editText').value = m.text||'';
-            document.getElementById('editLink').value = m.link||'';
-            document.getElementById('editHashtags').value = (m.hashtags||[]).join(' ');
-            document.getElementById('editBtns').innerHTML = '';
-            (m.buttons||[]).forEach(b => editAddBtn(b.label, b.url));
-            document.getElementById('editOverlay').classList.add('open');
-        });
-    };
-    window.closeEdit = function(){ document.getElementById('editOverlay').classList.remove('open'); CHAT_EDIT_ID = null; };
-    window.editAddBtn = function(l='', u=''){
-        const c = document.getElementById('editBtns');
-        const d = document.createElement('div');
-        d.style.cssText = 'display:flex;gap:4px;margin:2px 0;';
-        d.innerHTML = `<input placeholder="Текст" value="${esc(l)}" style="flex:1;"><input placeholder="Ссылка" value="${esc(u)}" style="flex:1;"><button class="btn btn-danger" onclick="this.parentElement.remove()">✕</button>`;
-        c.appendChild(d);
-    };
-    window.doSaveEdit = function(){
-        if(!CHAT_EDIT_ID) return;
-        const { msgId, roomId } = CHAT_EDIT_ID;
-        const marquee = document.getElementById('editMarquee').value.trim();
-        const text = document.getElementById('editText').value.trim();
-        const link = document.getElementById('editLink').value.trim();
-        const hr = document.getElementById('editHashtags').value.trim();
-        const hashtags = hr ? hr.split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5) : [];
-        const buttons = [];
-        document.querySelectorAll('#editBtns > div').forEach(g => {
-            const [li, ui] = g.querySelectorAll('input');
-            if(ui.value.trim()) buttons.push({ label: li.value.trim()||'🔗 Перейти', url: ui.value.trim() });
-        });
-        db.ref(chatPath(roomId)+'/'+msgId).update({
-            marquee: marquee||null, text: text||'📝', link: link||null, hashtags, buttons,
-            edited: true, editedAt: Date.now(), isPost: !!(marquee||link||buttons.length)
-        }).then(closeEdit);
-    };
-    window.doDeleteEdit = function(){
-        if(!CHAT_EDIT_ID || !confirm('Удалить?')) return;
-        const { msgId, roomId } = CHAT_EDIT_ID;
-        db.ref(chatPath(roomId)+'/'+msgId).remove();
-        closeEdit();
-    };
-
-    // ═══════════════════════════════════════════
-    // ── INIT ────────────────────────────────────
-    // ═══════════════════════════════════════════
-    loadFeed();
-
-    // Seed examples if empty
-    db.ref('sites/'+SITE+'/feed_posts').once('value', snap => {
-        if(snap.exists()) return;
-        const ex = [
-            { author:'📢 Администрация', text:'Добро пожаловать в DeepChat! Здесь можно общаться и делиться новостями. 🏳️‍🌈', time:'12:00', timestamp:Date.now()-3600000, marquee:'🌟 Добро пожаловать в DeepChat! 🌟', link:null, buttons:[{label:'📋 Правила', url:'#'}], hashtags:['#ДоброПожаловать'], img:null, edited:false },
-            { author:'🏳️‍🌈 Организатор', text:'Завтра в 19:00 онлайн-встреча! Все желающие приглашаются.', time:'11:30', timestamp:Date.now()-7200000, marquee:'📅 Встреча завтра в 19:00', link:null, buttons:[{label:'🔗 Подключиться', url:'https://meet.google.com/'}], hashtags:['#Встреча'], img:null, edited:false }
-        ];
-        ex.forEach(p => db.ref('sites/'+SITE+'/feed_posts').push(p));
+    const post={author:USER,text:text||'📝',time:now(),timestamp:Date.now(),marquee:marquee||null,link:link||null,buttons,hashtags,img:null,edited:false};
+    const ref=db.ref('sites/'+SITE+'/feed_posts');
+    if(FEED_EDIT_ID){
+        ref.child(FEED_EDIT_ID).update({...post,edited:true,editedAt:Date.now()}).then(fCancel);
+    }else{
+        ref.push(post).then(fCancel);
+    }
+};
+window.fCancel=function(){
+    ['fMarquee','fText','fLink','fHashtags'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fBtns').innerHTML='';
+    document.getElementById('fSubmitBtn').textContent='📤 Опубликовать';
+    FEED_EDIT_ID=null;
+};
+window.feedOpenEdit=function(id){
+    FEED_EDIT_ID=id;
+    db.ref('sites/'+SITE+'/feed_posts/'+id).once('value',snap=>{
+        const p=snap.val();if(!p)return;
+        document.getElementById('fMarquee').value=p.marquee||'';
+        document.getElementById('fText').value=p.text||'';
+        document.getElementById('fLink').value=p.link||'';
+        document.getElementById('fHashtags').value=(p.hashtags||[]).join(' ');
+        document.getElementById('fBtns').innerHTML='';
+        (p.buttons||[]).forEach(b=>fAddBtn(b.label,b.url));
+        document.getElementById('fSubmitBtn').textContent='💾 Обновить';
+        document.getElementById('feedForm').classList.add('show');
+        document.getElementById('feedForm').scrollIntoView({behavior:'smooth'});
     });
+};
+window.feedDel=function(id){
+    if(!confirm('🗑 Удалить пост?'))return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id).remove();
+};
+
+// ═══════════════════════════════════════════
+// ══  CHAT  ══════════════════════════════════
+// ═══════════════════════════════════════════
+
+function chatPath(roomId){return 'rooms/'+SITE+'_'+roomId+'/messages';}
+
+function loadChat(roomId){
+    if(chatUnsub){db.ref(chatUnsub).off('value');chatUnsub=null;}
+    DC_IMG=null;
+    document.getElementById('dcPreview').classList.remove('show');
+    document.getElementById('dcInput').value='';
+    const box=document.getElementById('dcMessages');
+    box.innerHTML='<div style="color:#555;text-align:center;padding:20px;font-size:14px;">⏳ Загрузка...</div>';
+    const path=chatPath(roomId);
+    chatUnsub=path;
+    db.ref(path).orderByChild('timestamp').on('value',snap=>{
+        box.innerHTML='';
+        if(!snap.exists()){
+            box.innerHTML='<div style="color:#555;text-align:center;padding:28px;">Сообщений нет. Напишите первым!</div>';
+            return;
+        }
+        snap.forEach(s=>{const m=s.val();m.id=s.key;box.appendChild(renderChatMsg(m,roomId));});
+        box.scrollTop=box.scrollHeight;
+    });
+}
+
+function renderChatMsg(m,roomId){
+    const d=document.createElement('div');
+    d.className='msg';
+    const isPost=m.isPost||m.marquee||(m.buttons&&m.buttons.length);
+    const mq=(isPost&&m.marquee)?`<div class="marquee"><span>${esc(m.marquee)}</span></div>`:'';
+    const img=m.img?`<img class="img-preview" src="${esc(m.img)}" onclick="window.open(this.src)">`:'';
+    const fr=(isPost&&m.link)?`<div class="post-frame"><iframe src="${esc(m.link)}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>`:'';
+    let btns='';
+    if(isPost&&m.buttons&&m.buttons.length){
+        btns='<div style="display:flex;flex-wrap:wrap;gap:4px;margin:4px 0;">'+m.buttons.filter(b=>b.url).map(b=>`<a href="${esc(b.url)}" target="_blank" style="background:#0088cc;color:#fff;padding:2px 14px;border-radius:30px;text-decoration:none;font-weight:600;font-size:13px;">${esc(b.label||'🔗')}</a>`).join('')+'</div>';
+    }
+    let tags='';
+    if(isPost&&m.hashtags&&m.hashtags.length){
+        tags='<div>'+m.hashtags.map(t=>`<span style="color:#66aaff;background:#18191a;padding:0 10px;border-radius:20px;border:1px solid #3a3b3c;font-size:11px;display:inline-block;margin:2px;">${esc(t)}</span>`).join('')+'</div>';
+    }
+    let txt=esc(m.text||'');
+    if(!isPost){
+        const lm=(m.text||'').match(/(https?:\/\/[^\s]+)/);
+        if(lm) txt=txt.replace(esc(lm[1]),`<span style="color:#66aaff;text-decoration:underline;">${esc(lm[1])}</span>`);
+    }
+    let acts=`<button onclick="dcLike('${m.id}','${roomId}')">👍 ${m.likes||0}</button><button onclick="dcReply('${esc(m.nick)}')">💬</button>`;
+    if(m.nick===USER||IS_ROOM_ADMIN){
+        acts+=`<button onclick="openChatEdit('${m.id}','${roomId}')">✏️</button>`;
+        acts+=`<button onclick="dcDel('${m.id}','${roomId}')">🗑</button>`;
+    }
+    d.innerHTML=`${mq}
+        <div><span class="author">${esc(m.nick||'?')}</span><span class="time">${m.time||''}${m.edited?' <span style="color:#555;font-size:10px;">(ред.)</span>':''}</span></div>
+        <div class="text">${txt}</div>
+        ${img}${btns}${fr}${tags}
+        <div class="msg-actions">${acts}</div>`;
+    return d;
+}
+
+// send user msg
+window.dcSend=function(){
+    if(!CUR_ROOM)return;
+    const input=document.getElementById('dcInput');
+    const text=input.value.trim();
+    if(!text&&!DC_IMG)return;
+    db.ref(chatPath(CUR_ROOM)).push({nick:USER,text:text||'📷',time:now(),timestamp:Date.now(),likes:0,img:DC_IMG||null,edited:false,isPost:false});
+    input.value='';dcRemoveImg();
+};
+document.getElementById('dcInput').addEventListener('keypress',e=>{if(e.key==='Enter')dcSend();});
+
+// image
+document.getElementById('dcFile').addEventListener('change',function(e){
+    const f=e.target.files[0];
+    if(!f||!f.type.startsWith('image/'))return;
+    if(f.size>2*1024*1024){alert('Максимум 2MB');return;}
+    const r=new FileReader();
+    r.onload=ev=>{
+        DC_IMG=ev.target.result;
+        document.getElementById('dcPreviewImg').src=DC_IMG;
+        document.getElementById('dcPreviewName').textContent=f.name.slice(0,12);
+        document.getElementById('dcPreview').classList.add('show');
+    };
+    r.readAsDataURL(f);
+});
+window.dcRemoveImg=function(){DC_IMG=null;document.getElementById('dcPreview').classList.remove('show');document.getElementById('dcFile').value='';};
+
+// like / reply / delete
+window.dcLike=function(id,roomId){
+    const key='lk_'+id+'_'+USER;
+    if(localStorage.getItem(key))return;
+    db.ref(chatPath(roomId)+'/'+id+'/likes').transaction(v=>(v||0)+1);
+    localStorage.setItem(key,'1');
+};
+window.dcReply=function(nick){const i=document.getElementById('dcInput');i.value='@'+nick+' ';i.focus();};
+window.dcDel=function(id,roomId){if(!confirm('Удалить?'))return;db.ref(chatPath(roomId)+'/'+id).remove();};
+
+// ── ADMIN PUBLISH in chat ──
+window.toggleAdminForm=function(){
+    const f=document.getElementById('dcAdminForm');
+    const btn=document.querySelector('.admin-bar .bar-header button');
+    const open=f.classList.toggle('open');
+    btn.textContent=open?'▲ Закрыть':'▼ Открыть';
+};
+window.apAddBtn=function(l='',u=''){
+    const c=document.getElementById('apBtns');
+    const d=document.createElement('div');
+    d.className='abtn-row';
+    d.innerHTML=`<input placeholder="Текст" value="${esc(l)}"><input placeholder="Ссылка" value="${esc(u)}"><button class="abtn-remove" onclick="this.parentElement.remove()">✕</button>`;
+    c.appendChild(d);
+};
+window.apPublish=function(){
+    if(!CUR_ROOM){alert('Сначала откройте комнату');return;}
+    const marquee=document.getElementById('apMarquee').value.trim();
+    const text=document.getElementById('apText').value.trim();
+    const link=document.getElementById('apLink').value.trim();
+    const hr=document.getElementById('apHashtags').value.trim();
+    const hashtags=hr?hr.split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5):[];
+    if(!marquee&&!text&&!link){alert('⚠️ Заполните хотя бы одно поле');return;}
+    const buttons=[];
+    document.querySelectorAll('#apBtns .abtn-row').forEach(g=>{
+        const[li,ui]=g.querySelectorAll('input');
+        if(ui.value.trim()) buttons.push({label:li.value.trim()||'🔗 Перейти',url:ui.value.trim()});
+    });
+    db.ref(chatPath(CUR_ROOM)).push({
+        nick:USER,text:text||marquee||'📋',time:now(),timestamp:Date.now(),
+        likes:0,marquee:marquee||null,link:link||null,buttons,hashtags,img:null,isPost:true,edited:false
+    }).then(()=>{
+        ['apMarquee','apText','apLink','apHashtags'].forEach(id=>document.getElementById(id).value='');
+        document.getElementById('apBtns').innerHTML='';
+        document.getElementById('dcAdminForm').classList.remove('open');
+        document.querySelector('.admin-bar .bar-header button').textContent='▼ Открыть';
+    });
+};
+
+// ── EDIT MODAL (chat) ──
+window.openChatEdit=function(msgId,roomId){
+    CHAT_EDIT_ID={msgId,roomId};
+    db.ref(chatPath(roomId)+'/'+msgId).once('value',snap=>{
+        const m=snap.val();if(!m)return;
+        document.getElementById('editMarquee').value=m.marquee||'';
+        document.getElementById('editText').value=m.text||'';
+        document.getElementById('editLink').value=m.link||'';
+        document.getElementById('editHashtags').value=(m.hashtags||[]).join(' ');
+        document.getElementById('editBtns').innerHTML='';
+        (m.buttons||[]).forEach(b=>editAddBtn(b.label,b.url));
+        document.getElementById('editOverlay').classList.add('open');
+    });
+};
+window.closeEdit=function(){document.getElementById('editOverlay').classList.remove('open');CHAT_EDIT_ID=null;};
+window.editAddBtn=function(l='',u=''){
+    const c=document.getElementById('editBtns');
+    const d=document.createElement('div');
+    d.className='ebtn-row';
+    d.innerHTML=`<input placeholder="Текст" value="${esc(l)}"><input placeholder="Ссылка" value="${esc(u)}"><button class="ebtn-rem" onclick="this.parentElement.remove()">✕</button>`;
+    c.appendChild(d);
+};
+window.doSaveEdit=function(){
+    if(!CHAT_EDIT_ID)return;
+    const{msgId,roomId}=CHAT_EDIT_ID;
+    const marquee=document.getElementById('editMarquee').value.trim();
+    const text=document.getElementById('editText').value.trim();
+    const link=document.getElementById('editLink').value.trim();
+    const hr=document.getElementById('editHashtags').value.trim();
+    const hashtags=hr?hr.split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5):[];
+    const buttons=[];
+    document.querySelectorAll('#editBtns .ebtn-row').forEach(g=>{
+        const[li,ui]=g.querySelectorAll('input');
+        if(ui.value.trim()) buttons.push({label:li.value.trim()||'🔗 Перейти',url:ui.value.trim()});
+    });
+    db.ref(chatPath(roomId)+'/'+msgId).update({
+        marquee:marquee||null,text:text||'📝',link:link||null,hashtags,buttons,
+        edited:true,editedAt:Date.now(),isPost:!!(marquee||link||buttons.length)
+    }).then(closeEdit);
+};
+window.doDeleteEdit=function(){
+    if(!CHAT_EDIT_ID||!confirm('Удалить?'))return;
+    const{msgId,roomId}=CHAT_EDIT_ID;
+    db.ref(chatPath(roomId)+'/'+msgId).remove();
+    closeEdit();
+};
+
+// ═══════════════════════════════════════════
+// ── INIT ────────────────────────────────────
+// ═══════════════════════════════════════════
+loadFeed();
+
+// Seed examples if empty
+db.ref('sites/'+SITE+'/feed_posts').once('value',snap=>{
+    if(snap.exists())return;
+    const ex=[
+        {author:'📢 Администрация',text:'Добро пожаловать в DeepChat! Здесь можно общаться и делиться новостями. 🏳️‍🌈',time:'12:00',timestamp:Date.now()-3600000,marquee:'🌟 Добро пожаловать в DeepChat! 🌟',link:null,buttons:[{label:'📋 Правила',url:'#'}],hashtags:['#ДоброПожаловать'],img:null,edited:false},
+        {author:'🏳️‍🌈 Организатор',text:'Завтра в 19:00 онлайн-встреча! Все желающие приглашаются.',time:'11:30',timestamp:Date.now()-7200000,marquee:'📅 Встреча завтра в 19:00',link:null,buttons:[{label:'🔗 Подключиться',url:'https://meet.google.com/'}],hashtags:['#Встреча'],img:null,edited:false}
+    ];
+    ex.forEach(p=>db.ref('sites/'+SITE+'/feed_posts').push(p));
+});
 
 })();
 </script>
