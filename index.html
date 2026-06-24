@@ -39,6 +39,8 @@
         .post-actions .danger:hover{background:#7a2222}
         .post-actions .primary{background:#0088cc;color:#fff}
         .post-actions .primary:hover{background:#00a3e0}
+        .post-actions .orange{background:#ff8c00;color:#111}
+        .post-actions .orange:hover{background:#ffa033}
         .empty{text-align:center;padding:50px 20px;color:#555;font-size:16px}
         /* admin form */
         .admin-form{display:none;background:#18191a;border:1px solid #3a3b3c;border-radius:12px;padding:14px;margin-bottom:14px}
@@ -180,7 +182,9 @@ const SITE = (window.location.hostname||'local').replace(/\./g,'_');
 // ── USER ──
 let USER = localStorage.getItem('dc_u_'+SITE)||'';
 let IS_ADMIN = localStorage.getItem('dc_fa_'+SITE)==='1';
+let IS_SUPER = localStorage.getItem('dc_super_'+SITE)==='1';
 let EDIT_ID = null;
+let VIEWING_POST = null;
 
 if(!USER){
     const n = prompt('👤 Ваше имя:');
@@ -210,12 +214,22 @@ window.openLogin=function(){
 };
 window.closeModal=function(id){document.getElementById(id).classList.remove('open');};
 window.checkPass=function(){
-    if(document.getElementById('loginPass').value.trim()==='12345'){
+    const pass = document.getElementById('loginPass').value.trim();
+    if(pass==='12345'){
         IS_ADMIN=true;
         localStorage.setItem('dc_fa_'+SITE,'1');
         applyAdminUI();
         closeModal('loginModal');
         loadFeed();
+    }else if(pass==='super123'){
+        IS_SUPER=true;
+        IS_ADMIN=true;
+        localStorage.setItem('dc_super_'+SITE,'1');
+        localStorage.setItem('dc_fa_'+SITE,'1');
+        applyAdminUI();
+        closeModal('loginModal');
+        loadFeed();
+        alert('🔥 Супер-админ режим активирован!');
     }else alert('❌ Неверный пароль!');
 };
 
@@ -240,6 +254,8 @@ function loadFeed(){
 function renderPost(p){
     const d=document.createElement('div');
     d.className='post';
+    if(p.pinned) d.style.borderColor = '#ff8c00';
+    
     const mq=p.marquee?`<div class="post-marquee"><span>${esc(p.marquee)}</span></div>`:'';
     const img=p.img?`<img class="post-img" src="${esc(p.img)}" onclick="window.open(this.src)">`:'';
     const fr=p.link?`<div class="post-frame"><iframe src="${esc(p.link)}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>`:'';
@@ -251,15 +267,52 @@ function renderPost(p){
     if(p.hashtags&&p.hashtags.length){
         tags='<div class="post-tags">'+p.hashtags.map(t=>`<span>${esc(t)}</span>`).join('')+'</div>';
     }
-    let acts='<button onclick="alert(\'❤️ Лайк\')">❤️</button><button onclick="alert(\'💬 Обсуждение\')">💬</button><button onclick="alert(\'🔄 Репост\')">🔄</button>';
+    
+    // Кнопки для обычного пользователя
+    let acts = `
+        <button onclick="likePost('${p.id}')">❤️ ${p.likes||0}</button>
+        <button onclick="discussPost('${p.id}','${esc((p.text||'Пост').slice(0,28))}')">💬 Обсуждение</button>
+        <button onclick="repostPost('${p.id}')">🔄 Репост</button>
+        <button onclick="reportPost('${p.id}')">🚩 Жалоба</button>
+        <button onclick="sharePost('${p.id}')">📎 Поделиться</button>
+    `;
+    
+    // Кнопки админа
     if(IS_ADMIN){
-        acts+=`<button class="primary" onclick="openEdit('${p.id}')">✏️ Ред.</button>`;
-        acts+=`<button class="danger" onclick="delPost('${p.id}')">🗑</button>`;
+        acts += `<button class="primary" onclick="openEdit('${p.id}')">✏️ Ред.</button>`;
+        acts += `<button class="danger" onclick="delPost('${p.id}')">🗑 Удалить</button>`;
+        acts += `<button class="orange" onclick="togglePin('${p.id}')">${p.pinned?'📌 Открепить':'📌 Закрепить'}</button>`;
+        acts += `<button onclick="viewStats('${p.id}')">👁️ Статистика</button>`;
+        acts += `<button class="danger" onclick="hidePost('${p.id}')">🚫 Скрыть</button>`;
+        acts += `<button class="orange" onclick="bumpPost('${p.id}')">🔥 Поднять</button>`;
+        acts += `<button onclick="editTags('${p.id}')">🏷️ Хэштеги</button>`;
+        acts += `<button onclick="changeImage('${p.id}')">🖼️ Картинка</button>`;
+        acts += `<button onclick="editTextOnly('${p.id}')">📝 Текст</button>`;
     }
-    d.innerHTML=`${mq}
-        <div class="post-header"><span class="post-author">${esc(p.author||'Аноним')}</span><span class="post-time">${p.time||''}${p.edited?' <span style="color:#555;font-size:11px;">(ред.)</span>':''}</span></div>
-        <div class="post-text">${esc(p.text||'')}</div>
-        ${img}${btns}${fr}${tags}
+    
+    // Кнопки супер-админа
+    if(IS_SUPER){
+        acts += `<button class="orange" onclick="boostLikes('${p.id}')">➕ Накрутка лайков</button>`;
+        acts += `<button onclick="boostViews('${p.id}')">➕ Накрутка просмотров</button>`;
+        acts += `<button onclick="boostComments('${p.id}')">➕ Накрутка комментариев</button>`;
+        acts += `<button onclick="changeAuthor('${p.id}')">👤 Смена автора</button>`;
+        acts += `<button onclick="changeDate('${p.id}')">📅 Изменить дату</button>`;
+        acts += `<button class="orange" onclick="promotePost('${p.id}')">🎯 Продвинуть</button>`;
+    }
+    
+    const authorDisplay = p.hidden ? '<span style="color:#666;">[Скрыто]</span>' : esc(p.author||'Аноним');
+    const timeDisplay = p.hidden ? '' : (p.time||'');
+    
+    d.innerHTML = `${mq}
+        <div class="post-header">
+            <span class="post-author">${authorDisplay}</span>
+            <span class="post-time">${timeDisplay}${p.edited?' <span style="color:#555;font-size:11px;">(ред.)</span>':''}${p.pinned?' <span style="color:#ff8c00;font-size:11px;">📌</span>':''}</span>
+        </div>
+        <div class="post-text">${p.hidden ? '<span style="color:#666;">Этот пост скрыт администрацией</span>' : esc(p.text||'')}</div>
+        ${p.hidden ? '' : img}
+        ${p.hidden ? '' : btns}
+        ${p.hidden ? '' : fr}
+        ${p.hidden ? '' : tags}
         <div class="post-actions">${acts}</div>`;
     return d;
 }
@@ -284,7 +337,7 @@ window.fSubmit=function(){
         const[li,ui]=g.querySelectorAll('input');
         if(ui.value.trim()) buttons.push({label:li.value.trim()||'🔗 Перейти',url:ui.value.trim()});
     });
-    const post={author:USER,text:text||'📝',time:now(),timestamp:Date.now(),marquee:marquee||null,link:link||null,buttons,hashtags,img:null,edited:false};
+    const post={author:USER,text:text||'📝',time:now(),timestamp:Date.now(),marquee:marquee||null,link:link||null,buttons,hashtags,img:null,edited:false,likes:0,views:0,comments:0,pinned:false,hidden:false};
     const ref=db.ref('sites/'+SITE+'/feed_posts');
     if(EDIT_ID){
         ref.child(EDIT_ID).update({...post,edited:true,editedAt:Date.now()}).then(fCancel);
@@ -298,9 +351,120 @@ window.fCancel=function(){
     document.getElementById('fSubmitBtn').textContent='📤 Опубликовать';
     EDIT_ID=null;
 };
+
+// ── ПОЛЬЗОВАТЕЛЬСКИЕ ДЕЙСТВИЯ ──
+window.likePost=function(id){
+    const key='lk_'+id+'_'+USER;
+    if(localStorage.getItem(key)){alert('❤️ Вы уже лайкнули этот пост');return;}
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/likes').transaction(v=>(v||0)+1);
+    localStorage.setItem(key,'1');
+};
+window.discussPost=function(id,title){
+    alert('💬 Обсуждение поста: '+title+'\n(Откроется отдельный чат)');
+};
+window.repostPost=function(id){
+    db.ref('sites/'+SITE+'/feed_posts/'+id).once('value',snap=>{
+        const p=snap.val();
+        if(!p)return;
+        const repost={...p,author:USER+' (репост)',time:now(),timestamp:Date.now(),edited:false,likes:0,views:0,comments:0};
+        delete repost.id;
+        db.ref('sites/'+SITE+'/feed_posts').push(repost);
+        alert('🔄 Репост создан!');
+    });
+};
+window.reportPost=function(id){
+    if(confirm('🚩 Пожаловаться на этот пост?')){
+        alert('✅ Жалоба отправлена модераторам');
+    }
+};
+window.sharePost=function(id){
+    const url=window.location.href+'?post='+id;
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(url).then(()=>alert('📎 Ссылка скопирована!'));
+    }else{
+        prompt('📎 Скопируйте ссылку:', url);
+    }
+};
+
+// ── АДМИНСКИЕ ДЕЙСТВИЯ ──
 window.delPost=function(id){
     if(!confirm('🗑 Удалить пост?'))return;
     db.ref('sites/'+SITE+'/feed_posts/'+id).remove();
+};
+window.togglePin=function(id){
+    db.ref('sites/'+SITE+'/feed_posts/'+id).once('value',snap=>{
+        const p=snap.val();
+        if(!p)return;
+        db.ref('sites/'+SITE+'/feed_posts/'+id+'/pinned').set(!p.pinned);
+    });
+};
+window.viewStats=function(id){
+    db.ref('sites/'+SITE+'/feed_posts/'+id).once('value',snap=>{
+        const p=snap.val();
+        if(!p)return;
+        alert(`👁️ Статистика поста:\n❤️ Лайки: ${p.likes||0}\n👀 Просмотры: ${p.views||0}\n💬 Комментарии: ${p.comments||0}`);
+    });
+};
+window.hidePost=function(id){
+    if(!confirm('🚫 Скрыть пост?'))return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/hidden').set(true);
+};
+window.bumpPost=function(id){
+    db.ref('sites/'+SITE+'/feed_posts/'+id).once('value',snap=>{
+        const p=snap.val();
+        if(!p)return;
+        db.ref('sites/'+SITE+'/feed_posts/'+id+'/timestamp').set(Date.now());
+        alert('🔥 Пост поднят вверх!');
+    });
+};
+window.editTags=function(id){
+    const tags=prompt('🏷️ Введите хэштеги через пробел:');
+    if(tags===null)return;
+    const hashtags=tags.trim().split(/\s+/).filter(t=>t.startsWith('#')).slice(0,5);
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/hashtags').set(hashtags);
+};
+window.changeImage=function(id){
+    const url=prompt('🖼️ Введите URL новой картинки:');
+    if(url===null||!url.trim())return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/img').set(url.trim());
+};
+window.editTextOnly=function(id){
+    const text=prompt('📝 Введите новый текст:');
+    if(text===null)return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id).update({text:text.trim(),edited:true,editedAt:Date.now()});
+};
+
+// ── СУПЕР-АДМИНСКИЕ ДЕЙСТВИЯ ──
+window.boostLikes=function(id){
+    const count=parseInt(prompt('➕ Сколько лайков накрутить?', '10'));
+    if(!count||count<1)return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/likes').transaction(v=>(v||0)+count);
+};
+window.boostViews=function(id){
+    const count=parseInt(prompt('➕ Сколько просмотров накрутить?', '50'));
+    if(!count||count<1)return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/views').transaction(v=>(v||0)+count);
+};
+window.boostComments=function(id){
+    const count=parseInt(prompt('➕ Сколько комментариев накрутить?', '5'));
+    if(!count||count<1)return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/comments').transaction(v=>(v||0)+count);
+};
+window.changeAuthor=function(id){
+    const author=prompt('👤 Введите нового автора:');
+    if(author===null||!author.trim())return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/author').set(author.trim());
+};
+window.changeDate=function(id){
+    const date=prompt('📅 Введите новую дату (например: 12:00):');
+    if(date===null||!date.trim())return;
+    db.ref('sites/'+SITE+'/feed_posts/'+id+'/time').set(date.trim());
+};
+window.promotePost=function(id){
+    if(confirm('🎯 Продвинуть пост в рекомендациях?')){
+        db.ref('sites/'+SITE+'/feed_posts/'+id).update({promoted:true,promotedAt:Date.now()});
+        alert('✅ Пост продвигается!');
+    }
 };
 
 // ── EDIT ──
@@ -360,8 +524,8 @@ loadFeed();
 db.ref('sites/'+SITE+'/feed_posts').once('value',snap=>{
     if(snap.exists())return;
     const ex=[
-        {author:'📢 Администрация',text:'Добро пожаловать в DeepFeed! Здесь можно делиться новостями, общаться и находить друзей. 🏳️‍🌈',time:'12:00',timestamp:Date.now()-3600000,marquee:'🌟 Добро пожаловать в DeepFeed! Будьте собой! 🌟',link:null,buttons:[{label:'📋 Правила',url:'#'}],hashtags:['#ДоброПожаловать','#Сообщество'],img:null,edited:false},
-        {author:'🏳️‍🌈 Организатор',text:'Завтра в 19:00 онлайн-встреча! Обсудим планы на месяц. Все желающие приглашаются!',time:'11:30',timestamp:Date.now()-7200000,marquee:'📅 Онлайн-встреча завтра в 19:00!',link:null,buttons:[{label:'🔗 Подключиться',url:'https://meet.google.com/'}],hashtags:['#Встреча','#Планы'],img:null,edited:false}
+        {author:'📢 Администрация',text:'Добро пожаловать в DeepFeed! Здесь можно делиться новостями, общаться и находить друзей. 🏳️‍🌈',time:'12:00',timestamp:Date.now()-3600000,marquee:'🌟 Добро пожаловать в DeepFeed! Будьте собой! 🌟',link:null,buttons:[{label:'📋 Правила',url:'#'}],hashtags:['#ДоброПожаловать','#Сообщество'],img:null,edited:false,likes:5,views:42,comments:2,pinned:false,hidden:false},
+        {author:'🏳️‍🌈 Организатор',text:'Завтра в 19:00 онлайн-встреча! Обсудим планы на месяц. Все желающие приглашаются!',time:'11:30',timestamp:Date.now()-7200000,marquee:'📅 Онлайн-встреча завтра в 19:00!',link:null,buttons:[{label:'🔗 Подключиться',url:'https://meet.google.com/'}],hashtags:['#Встреча','#Планы'],img:null,edited:false,likes:8,views:31,comments:3,pinned:false,hidden:false}
     ];
     ex.forEach(p=>db.ref('sites/'+SITE+'/feed_posts').push(p));
 });
