@@ -446,6 +446,470 @@
         }
         .app-modal .modal-box .modal-btns .btn-save.orange:hover { background: #ffa033; }
 
+        /* ===== СТИЛИ ДЛЯ ЛЕНТЫ С КОММЕНТАРИЯМИ ===== */
+        #deepchat-feed * { margin: 0; padding: 0; box-sizing: border-box; }
+        #deepchat-feed {
+            display: block;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            width: 100%;
+            min-height: 300px;
+            position: relative;
+        }
+        #deepchat-feed .df-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        #deepchat-feed .df-post {
+            background: #0f0f1a;
+            border: 1px solid #1a1a2a;
+            border-radius: 16px;
+            padding: 16px;
+            transition: border-color 0.2s;
+            animation: dfFadeIn 0.3s ease;
+        }
+        @keyframes dfFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #deepchat-feed .df-post:hover { border-color: #2a2a3a; }
+        #deepchat-feed .df-post .df-marquee {
+            background: #0f0f1a;
+            padding: 4px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #1a1a2a;
+        }
+        #deepchat-feed .df-post .df-marquee span {
+            display: inline-block;
+            animation: dfScroll 10s linear infinite;
+            color: #ff8c00;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding-left: 16px;
+        }
+        @keyframes dfScroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        #deepchat-feed .df-post .df-post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        #deepchat-feed .df-post .df-post-header .df-author {
+            color: #ffaa44;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        #deepchat-feed .df-post .df-post-header .df-time {
+            color: #666;
+            font-size: 0.6rem;
+        }
+        #deepchat-feed .df-post .df-post-header .df-edit-badge {
+            color: #555;
+            font-size: 0.5rem;
+        }
+        #deepchat-feed .df-post .df-text {
+            margin: 6px 0;
+            word-break: break-word;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #ddd;
+        }
+        #deepchat-feed .df-post .df-img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 12px;
+            margin: 8px 0;
+            border: 1px solid #1a1a2a;
+            cursor: pointer;
+        }
+        #deepchat-feed .df-post .df-frame {
+            margin: 8px 0;
+            border: 1px solid #1a1a2a;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #0f0f1a;
+            width: 100%;
+        }
+        #deepchat-feed .df-post .df-frame iframe {
+            width: 100%;
+            height: 280px;
+            border: none;
+            display: block;
+        }
+        #deepchat-feed .df-post .df-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        #deepchat-feed .df-post .df-buttons .df-btn {
+            display: inline-block;
+            background: #ff8c00;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 18px;
+            text-align: center;
+            text-decoration: none;
+            color: #0b0b0f;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        #deepchat-feed .df-post .df-buttons .df-btn:hover { background: #ffa033; }
+        #deepchat-feed .df-post .df-hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 8px 0 4px 0;
+            padding-top: 6px;
+            border-top: 1px solid #1a1a2a;
+        }
+        #deepchat-feed .df-post .df-hashtags .df-tag {
+            color: #66aaff;
+            font-size: 0.65rem;
+            background: #0f0f1a;
+            padding: 0 10px;
+            border-radius: 20px;
+            border: 1px solid #1a1a2a;
+        }
+        #deepchat-feed .df-post .df-seo {
+            display: none;
+            font-size: 0.6rem;
+            color: #333;
+            margin-top: 8px;
+            padding: 6px;
+            background: #05050a;
+            border-radius: 6px;
+            border: 1px solid #0a0a12;
+        }
+        #deepchat-feed .df-post .df-seo.show { display: block; }
+        #deepchat-feed .df-post .df-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        #deepchat-feed .df-post .df-actions button {
+            background: #1a1a2a;
+            border: 1px solid #2a2a3a;
+            color: #ccc;
+            padding: 0 12px;
+            border-radius: 40px;
+            font-size: 0.6rem;
+            cursor: pointer;
+        }
+        #deepchat-feed .df-post .df-actions button:hover { background: #2a2a3a; }
+        #deepchat-feed .df-post .df-actions .df-edit-btn {
+            background: #2a2a3a;
+            border-color: #ff8c00;
+            color: #ff8c00;
+        }
+        #deepchat-feed .df-post .df-actions .df-del-btn {
+            background: #4a1a1a;
+            border-color: #6a1a1a;
+            color: #ff6666;
+        }
+
+        /* ===== ЛАЙКИ И КОММЕНТАРИИ ===== */
+        #deepchat-feed .df-post .df-footer {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #1a1a2a;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        #deepchat-feed .df-post .df-like-btn {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+        #deepchat-feed .df-post .df-like-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+        #deepchat-feed .df-post .df-like-btn .like-count {
+            color: #888;
+            font-size: 0.8rem;
+        }
+        #deepchat-feed .df-post .df-like-btn.liked {
+            color: #ff4757;
+        }
+        #deepchat-feed .df-post .df-like-btn.liked .like-count {
+            color: #ff4757;
+        }
+        #deepchat-feed .df-post .df-comment-toggle {
+            background: none;
+            border: none;
+            color: #66aaff;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+        #deepchat-feed .df-post .df-comment-toggle:hover {
+            background: rgba(102, 170, 255, 0.1);
+        }
+        #deepchat-feed .df-post .df-comment-toggle .comment-count {
+            color: #888;
+            font-size: 0.8rem;
+        }
+        #deepchat-feed .df-post .df-comment-toggle .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s;
+        }
+        #deepchat-feed .df-post .df-comment-toggle .arrow.open {
+            transform: rotate(180deg);
+        }
+
+        #deepchat-feed .df-post .df-comments {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #1a1a2a;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #deepchat-feed .df-post .df-comments.open {
+            display: flex;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment {
+            background: #0a0a12;
+            border-radius: 10px;
+            padding: 8px 12px;
+            border: 1px solid #1a1a2a;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-author {
+            color: #ffaa44;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-time {
+            color: #666;
+            font-size: 0.5rem;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-text {
+            color: #ccc;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+            align-items: center;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-like {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 4px;
+            border-radius: 12px;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-like:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-like.liked {
+            color: #ff4757;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-like .cl-count {
+            color: #888;
+            font-size: 0.7rem;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-actions {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-actions button {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 0.55rem;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-actions button:hover {
+            color: #fff;
+        }
+        #deepchat-feed .df-post .df-comments .df-comment .df-comment-actions .del-btn {
+            color: #ff6666;
+        }
+
+        #deepchat-feed .df-post .df-comment-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        #deepchat-feed .df-post .df-comment-form input {
+            flex: 1;
+            padding: 6px 12px;
+            background: #0a0a12;
+            border: 1px solid #1a1a2a;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.8rem;
+            outline: none;
+        }
+        #deepchat-feed .df-post .df-comment-form input:focus {
+            border-color: #66aaff;
+        }
+        #deepchat-feed .df-post .df-comment-form button {
+            background: #66aaff;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-weight: 700;
+            color: #0b0b0f;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        #deepchat-feed .df-post .df-comment-form button:hover {
+            background: #88ccff;
+        }
+
+        #deepchat-feed .df-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #444;
+        }
+        #deepchat-feed .df-empty .df-empty-icon { font-size: 3rem; margin-bottom: 12px; }
+        #deepchat-feed .df-empty .df-empty-title { font-size: 1.2rem; color: #666; }
+        #deepchat-feed .df-empty .df-empty-sub { font-size: 0.85rem; color: #444; }
+
+        #deepchat-feed .df-create-form {
+            display: none;
+            background: #0f0f1a;
+            border: 1px solid #1a1a2a;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        #deepchat-feed .df-create-form.show { display: block; }
+        #deepchat-feed .df-create-form .df-form-title {
+            color: #ff8c00;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        #deepchat-feed .df-create-form input,
+        #deepchat-feed .df-create-form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: #0a0a12;
+            border: 1px solid #1a1a2a;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            margin-bottom: 8px;
+            font-family: inherit;
+        }
+        #deepchat-feed .df-create-form input:focus,
+        #deepchat-feed .df-create-form textarea:focus { border-color: #ff8c00; }
+        #deepchat-feed .df-create-form textarea { min-height: 60px; resize: vertical; }
+        #deepchat-feed .df-create-form .df-btn-group {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+        #deepchat-feed .df-create-form .df-btn-group input { flex: 1; margin-bottom: 0; }
+        #deepchat-feed .df-create-form .df-btn-group .df-remove-btn {
+            background: #4a1a1a;
+            color: #ff6666;
+            border: none;
+            border-radius: 30px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        #deepchat-feed .df-create-form .df-add-btn {
+            background: #1a1a2a;
+            border: 1px solid #2a2a3a;
+            color: #ff8c00;
+            padding: 4px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+        #deepchat-feed .df-create-form .df-add-btn:hover { background: #2a2a3a; }
+        #deepchat-feed .df-create-form .df-form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        #deepchat-feed .df-create-form .df-form-actions button {
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        #deepchat-feed .df-create-form .df-form-actions .df-submit-btn {
+            background: #ff8c00;
+            color: #0b0b0f;
+        }
+        #deepchat-feed .df-create-form .df-form-actions .df-submit-btn:hover { background: #ffa033; }
+        #deepchat-feed .df-create-form .df-form-actions .df-cancel-btn {
+            background: #2a2a2a;
+            color: #aaa;
+        }
+        #deepchat-feed .df-create-form .df-form-actions .df-cancel-btn:hover { background: #3a3a3a; }
+        #deepchat-feed ::-webkit-scrollbar { width: 4px; }
+        #deepchat-feed ::-webkit-scrollbar-track { background: transparent; }
+        #deepchat-feed ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+
+        @media (max-width: 640px) {
+            #deepchat-feed .df-post .df-frame iframe { height: 200px; }
+            #deepchat-feed .df-post { padding: 12px; }
+            #deepchat-feed .df-post .df-text { font-size: 0.85rem; }
+            #deepchat-feed .df-post .df-img { max-height: 200px; }
+        }
+        @media (max-width: 400px) {
+            #deepchat-feed .df-post .df-frame iframe { height: 160px; }
+            #deepchat-feed .df-post .df-img { max-height: 160px; }
+            #deepchat-feed .df-create-form .df-btn-group { flex-wrap: wrap; }
+            #deepchat-feed .df-create-form .df-btn-group input { min-width: 60px; }
+        }
+
+        /* ===== СТИЛИ ДЛЯ ЧАТА С ЛАЙКАМИ ===== */
         #deepchat-widget * { margin: 0; padding: 0; box-sizing: border-box; }
         #deepchat-widget {
             display: block;
@@ -516,19 +980,48 @@
             border: 1px solid #333;
             cursor: pointer;
         }
+        #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 4px;
+            border-radius: 12px;
+        }
+        #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+        #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn.liked {
+            color: #ff4757;
+        }
+        #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn .dl-count {
+            color: #888;
+            font-size: 0.7rem;
+        }
         #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-actions {
             display: flex;
             gap: 4px;
-            margin-top: 4px;
             flex-wrap: wrap;
+            margin-left: auto;
         }
         #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-actions button {
             background: #222233;
             border: 1px solid #333349;
             color: #ccc;
-            padding: 0 10px;
+            padding: 0 9px;
             border-radius: 40px;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             cursor: pointer;
         }
         #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-actions .dc-edit-btn {
@@ -626,23 +1119,13 @@
         #deepchat-widget ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
 
         @media (max-width: 640px) {
-            .app-header { padding: 10px 12px; min-height: 48px; }
-            .app-header .logo { font-size: 1rem; }
-            .app-header .hamburger { font-size: 1.4rem; padding: 2px 6px; }
-            .app-header .header-user { font-size: 0.55rem; padding: 1px 8px; }
-            .app-sidebar { width: 260px; left: -280px; }
-            .app-content { padding: 0 8px 20px; }
-            .feed-card .feed-header .f-title { font-size: 0.8rem; }
-            .feed-card .feed-body { padding: 8px; min-height: 250px; }
-            .admin-dots { bottom: 6px; right: 6px; gap: 6px; }
-            .admin-dot { width: 12px; height: 12px; }
             #deepchat-widget .dc-chat-root .dc-chat-panel { height: 45vh; min-height: 250px; }
+            #deepchat-widget .dc-chat-root .dc-chat-panel .dc-chat-input .dc-input-row input { font-size: 0.75rem; padding: 6px 12px; }
         }
         @media (max-width: 400px) {
-            .app-header .logo { font-size: 0.85rem; }
-            .app-header .hamburger { font-size: 1.2rem; }
-            .app-sidebar { width: 240px; left: -260px; }
             #deepchat-widget .dc-chat-root .dc-chat-panel { height: 40vh; min-height: 200px; }
+            #deepchat-widget .dc-chat-root .dc-chat-panel .dc-chat-input .dc-input-row input { font-size: 0.7rem; padding: 4px 10px; }
+            #deepchat-widget .dc-chat-root .dc-chat-panel .dc-chat-input .dc-input-row button { padding: 0 10px; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -750,7 +1233,7 @@
     // ======  FIREBASE  ======
     // ================================================================
 
-    // ПЕРВЫЙ Firebase (Лента)
+    // ПЕРВЫЙ Firebase (Лента + комментарии + лайки)
     const feedConfig = {
         apiKey: "AIzaSyC81Ow4VPAUcaQGAuJjhtA-OaR8hyqxCtI",
         authDomain: "mychatapp-2c141.firebaseapp.com",
@@ -763,7 +1246,7 @@
     const feedApp = firebase.initializeApp(feedConfig, 'feedApp');
     const feedDB = firebase.database(feedApp);
 
-    // ВТОРОЙ Firebase (Чаты)
+    // ВТОРОЙ Firebase (Чаты + лайки на сообщения)
     const chatConfig = {
         apiKey: "AIzaSyC5L2GQ-2CYj-GNYsHENASdvKVF68rsEb0",
         databaseURL: "https://mychatapp-2c141-default-rtdb.firebaseio.com",
@@ -979,6 +1462,526 @@
         });
     }
 
+    // ================================================================
+    // ======  ЗАГРУЗКА ЛЕНТЫ (С КОММЕНТАРИЯМИ И ЛАЙКАМИ)  ======
+    // ================================================================
+
+    function loadFeedWidget() {
+        const root = document.getElementById('deepchat-feed');
+        if (!root || root.dataset.loaded === 'true') return;
+        root.dataset.loaded = 'true';
+
+        const feedRef = feedDB.ref('sites/' + SITE_ID + '/feed_posts');
+        feedRef.once('value', snap => {
+            if (!snap.exists()) {
+                const examples = [
+                    {
+                        author: '📢 Администрация',
+                        text: 'Добро пожаловать в наше сообщество! Здесь вы можете общаться, делиться новостями и находить друзей.',
+                        time: '12:00',
+                        timestamp: Date.now() - 3600000,
+                        marquee: '🌟 Добро пожаловать в DeepChat! Будьте собой! 🌟',
+                        link: null,
+                        buttons: [{ label: '📋 Правила', url: '#' }],
+                        hashtags: ['#ДоброПожаловать', '#Сообщество'],
+                        seoDescription: 'Добро пожаловать в сообщество DeepChat',
+                        edited: false,
+                        img: null,
+                        likes: 0
+                    },
+                    {
+                        author: '🏳️‍🌈 Организатор',
+                        text: 'Завтра в 19:00 онлайн-встреча! Обсудим планы на месяц.',
+                        time: '11:30',
+                        timestamp: Date.now() - 7200000,
+                        marquee: '📅 Онлайн-встреча завтра в 19:00!',
+                        link: 'https://meet.google.com/',
+                        buttons: [{ label: '🔗 Подключиться', url: 'https://meet.google.com/' }],
+                        hashtags: ['#Встреча', '#Планы'],
+                        seoDescription: 'Онлайн-встреча сообщества завтра в 19:00',
+                        edited: false,
+                        img: null,
+                        likes: 0
+                    }
+                ];
+                examples.forEach(post => feedRef.push(post));
+            }
+        });
+
+        const script = document.createElement('script');
+        script.src = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(`
+            (function() {
+                const root = document.getElementById('deepchat-feed');
+                if (!root || root.dataset.loaded === 'true') return;
+                root.dataset.loaded = 'true';
+
+                const DB = feedDB;
+                const SITE_ID = '${SITE_ID}';
+                const USER = '${USER}';
+                const IS_ADMIN = ${IS_FEED_ADMIN};
+
+                // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
+                function escapeHtml(str) {
+                    if (!str) return '';
+                    return str.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+                }
+
+                function now() {
+                    return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                }
+
+                function formatTime(ts) {
+                    return new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                }
+
+                // ===== ОТРИСОВКА ПОСТА =====
+                function renderPost(container, post, postId) {
+                    const div = document.createElement('div');
+                    div.className = 'df-post';
+                    div.dataset.id = postId;
+
+                    // Подписываемся на лайки
+                    const likesRef = DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/likes');
+                    likesRef.on('value', snap => {
+                        const count = snap.val() || 0;
+                        const likeBtn = div.querySelector('.df-like-btn .like-count');
+                        if (likeBtn) likeBtn.textContent = count;
+                    });
+
+                    // Подписываемся на комментарии
+                    const commentsRef = DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments');
+                    commentsRef.on('value', snap => {
+                        const data = snap.val() || {};
+                        const count = Object.keys(data).length;
+                        const countEl = div.querySelector('.comment-count');
+                        if (countEl) countEl.textContent = count;
+                        // Если комментарии открыты, обновляем список
+                        const commentsDiv = div.querySelector('.df-comments');
+                        if (commentsDiv && commentsDiv.classList.contains('open')) {
+                            renderComments(commentsDiv, postId);
+                        }
+                    });
+
+                    let marqueeHtml = post.marquee ? \`<div class="df-marquee"><span>\${escapeHtml(post.marquee)}</span></div>\` : '';
+                    let imgHtml = post.img ? \`<img class="df-img" src="\${escapeHtml(post.img)}" onclick="window.open(this.src)">\` : '';
+                    let frameHtml = post.link ? \`<div class="df-frame"><iframe src="\${escapeHtml(post.link)}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>\` : '';
+                    
+                    let buttonsHtml = '';
+                    if (post.buttons && post.buttons.length > 0) {
+                        buttonsHtml = '<div class="df-buttons">';
+                        post.buttons.forEach(btn => {
+                            if (btn.url) buttonsHtml += \`<a href="\${escapeHtml(btn.url)}" target="_blank" class="df-btn">\${escapeHtml(btn.label || '🔗 Перейти')}</a>\`;
+                        });
+                        buttonsHtml += '</div>';
+                    }
+                    
+                    let hashtagsHtml = '';
+                    if (post.hashtags && post.hashtags.length > 0) {
+                        hashtagsHtml = '<div class="df-hashtags">';
+                        post.hashtags.forEach(tag => hashtagsHtml += \`<span class="df-tag">\${escapeHtml(tag)}</span>\`);
+                        hashtagsHtml += '</div>';
+                    }
+                    
+                    let seoHtml = post.seoDescription ? \`<div class="df-seo show">🔍 SEO: \${escapeHtml(post.seoDescription)}</div>\` : '';
+                    
+                    let actionsHtml = '';
+                    if (IS_ADMIN || post.author === USER) {
+                        actionsHtml = \`
+                            <div class="df-actions">
+                                <button class="df-edit-btn" onclick="dfEditPost('\${postId}')">✏️ Ред.</button>
+                                <button class="df-del-btn" onclick="dfDeletePost('\${postId}')">🗑 Удалить</button>
+                            </div>
+                        \`;
+                    }
+
+                    // Проверяем, лайкнул ли пользователь
+                    const userLiked = localStorage.getItem('df_like_' + postId + '_' + USER) === 'true';
+                    const likedClass = userLiked ? 'liked' : '';
+
+                    // ===== СБОРКА =====
+                    div.innerHTML = \`
+                        \${marqueeHtml}
+                        <div class="df-post-header">
+                            <span class="df-author">\${escapeHtml(post.author || 'Аноним')}</span>
+                            <span class="df-time">\${post.time || ''}\${post.edited ? ' <span class="df-edit-badge">(ред.)</span>' : ''}</span>
+                        </div>
+                        <div class="df-text">\${escapeHtml(post.text || '')}</div>
+                        \${imgHtml}
+                        \${buttonsHtml}
+                        \${frameHtml}
+                        \${hashtagsHtml}
+                        \${seoHtml}
+                        \${actionsHtml}
+                        <div class="df-footer">
+                            <button class="df-like-btn \${likedClass}" onclick="dfToggleLike('\${postId}')">
+                                ❤️ <span class="like-count">\${post.likes || 0}</span>
+                            </button>
+                            <button class="df-comment-toggle" onclick="dfToggleComments('\${postId}')">
+                                💬 <span class="comment-count">0</span> <span class="arrow">▼</span>
+                            </button>
+                            <button class="df-chat-btn" onclick="openPostChat('\${postId}','\${escapeHtml((post.text || 'Пост').slice(0,28))}')">
+                                💬 Обсудить
+                            </button>
+                        </div>
+                        <div class="df-comments" id="comments-\${postId}">
+                            <div class="df-comment-form">
+                                <input type="text" placeholder="Написать комментарий..." id="commentInput-\${postId}">
+                                <button onclick="dfSendComment('\${postId}')">➤</button>
+                            </div>
+                            <div class="df-comments-list" id="commentsList-\${postId}"></div>
+                        </div>
+                    \`;
+
+                    container.appendChild(div);
+
+                    // Если комментарии были открыты, открываем их
+                    const wasOpen = localStorage.getItem('df_comments_open_' + postId) === 'true';
+                    if (wasOpen) {
+                        const commentsDiv = div.querySelector('.df-comments');
+                        const arrow = div.querySelector('.arrow');
+                        if (commentsDiv) {
+                            commentsDiv.classList.add('open');
+                            if (arrow) arrow.classList.add('open');
+                            renderComments(commentsDiv, postId);
+                        }
+                    }
+                }
+
+                // ===== ОТРИСОВКА КОММЕНТАРИЕВ =====
+                function renderComments(container, postId) {
+                    const list = container.querySelector('.df-comments-list');
+                    if (!list) return;
+                    
+                    const commentsRef = DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments');
+                    commentsRef.orderByChild('timestamp').on('value', snap => {
+                        list.innerHTML = '';
+                        const data = snap.val() || {};
+                        const keys = Object.keys(data).sort((a, b) => (data[a].timestamp || 0) - (data[b].timestamp || 0));
+                        
+                        if (keys.length === 0) {
+                            list.innerHTML = '<div style="color:#444;font-size:0.8rem;padding:4px 0;">Нет комментариев</div>';
+                            return;
+                        }
+                        
+                        keys.forEach(key => {
+                            const c = data[key];
+                            const commentDiv = document.createElement('div');
+                            commentDiv.className = 'df-comment';
+                            
+                            // Проверяем, лайкнул ли пользователь этот комментарий
+                            const userLiked = localStorage.getItem('df_clike_' + key + '_' + USER) === 'true';
+                            const likedClass = userLiked ? 'liked' : '';
+                            
+                            // Подписываемся на лайки комментария
+                            const likeRef = DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments/' + key + '/likes');
+                            likeRef.on('value', snap => {
+                                const count = snap.val() || 0;
+                                const countEl = commentDiv.querySelector('.cl-count');
+                                if (countEl) countEl.textContent = count;
+                            });
+                            
+                            let actionsHtml = '';
+                            if (c.nick === USER || IS_ADMIN) {
+                                actionsHtml = \`
+                                    <div class="df-comment-actions">
+                                        <button class="del-btn" onclick="dfDeleteComment('\${postId}','\${key}')">🗑</button>
+                                    </div>
+                                \`;
+                            }
+                            
+                            commentDiv.innerHTML = \`
+                                <div class="df-comment-header">
+                                    <span class="df-comment-author">\${escapeHtml(c.nick || 'Аноним')}</span>
+                                    <span class="df-comment-time">\${c.time || ''}</span>
+                                </div>
+                                <div class="df-comment-text">\${escapeHtml(c.text || '')}</div>
+                                <div class="df-comment-footer">
+                                    <button class="df-comment-like \${likedClass}" onclick="dfToggleCommentLike('\${postId}','\${key}')">
+                                        ❤️ <span class="cl-count">\${c.likes || 0}</span>
+                                    </button>
+                                    \${actionsHtml}
+                                </div>
+                            \`;
+                            list.appendChild(commentDiv);
+                        });
+                    });
+                }
+
+                // ===== ЛАЙКИ =====
+                window.dfToggleLike = function(postId) {
+                    const key = 'df_like_' + postId + '_' + USER;
+                    if (localStorage.getItem(key) === 'true') {
+                        alert('❤️ Вы уже поставили лайк этому посту!');
+                        return;
+                    }
+                    
+                    // Если админ — предлагаем ввести число
+                    if (IS_ADMIN) {
+                        const count = prompt('❤️ Введите количество лайков (1, 10, 100, 500):', '1');
+                        if (count === null) return;
+                        const num = parseInt(count);
+                        if (isNaN(num) || num < 1) { alert('⚠️ Введите корректное число'); return; }
+                        DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/likes').transaction(v => (v || 0) + num);
+                        // Для админа не блокируем повторные накрутки
+                        return;
+                    }
+                    
+                    // Обычный пользователь — 1 лайк
+                    DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/likes').transaction(v => (v || 0) + 1);
+                    localStorage.setItem(key, 'true');
+                };
+
+                // ===== ЛАЙКИ НА КОММЕНТАРИИ =====
+                window.dfToggleCommentLike = function(postId, commentId) {
+                    const key = 'df_clike_' + commentId + '_' + USER;
+                    if (localStorage.getItem(key) === 'true') {
+                        alert('❤️ Вы уже поставили лайк этому комментарию!');
+                        return;
+                    }
+                    
+                    // Если админ — предлагаем ввести число
+                    if (IS_ADMIN) {
+                        const count = prompt('❤️ Введите количество лайков на комментарий (1, 10, 100, 500):', '1');
+                        if (count === null) return;
+                        const num = parseInt(count);
+                        if (isNaN(num) || num < 1) { alert('⚠️ Введите корректное число'); return; }
+                        DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments/' + commentId + '/likes').transaction(v => (v || 0) + num);
+                        return;
+                    }
+                    
+                    DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments/' + commentId + '/likes').transaction(v => (v || 0) + 1);
+                    localStorage.setItem(key, 'true');
+                };
+
+                // ===== КОММЕНТАРИИ =====
+                window.dfToggleComments = function(postId) {
+                    const commentsDiv = document.getElementById('comments-' + postId);
+                    const arrow = document.querySelector('#comments-' + postId)?.closest('.df-post')?.querySelector('.arrow');
+                    if (!commentsDiv) return;
+                    
+                    const isOpen = commentsDiv.classList.toggle('open');
+                    if (arrow) arrow.classList.toggle('open');
+                    
+                    // Сохраняем состояние
+                    localStorage.setItem('df_comments_open_' + postId, isOpen ? 'true' : 'false');
+                    
+                    if (isOpen) {
+                        renderComments(commentsDiv, postId);
+                        const input = document.getElementById('commentInput-' + postId);
+                        if (input) setTimeout(() => input.focus(), 100);
+                    }
+                };
+
+                window.dfSendComment = function(postId) {
+                    const input = document.getElementById('commentInput-' + postId);
+                    if (!input) return;
+                    const text = input.value.trim();
+                    if (!text) { alert('⚠️ Напишите комментарий'); return; }
+                    
+                    DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments').push({
+                        nick: USER || 'Аноним',
+                        text: text,
+                        time: now(),
+                        timestamp: Date.now(),
+                        likes: 0
+                    }).then(() => {
+                        input.value = '';
+                    }).catch(e => alert('❌ ' + e.message));
+                };
+
+                window.dfDeleteComment = function(postId, commentId) {
+                    if (!confirm('🗑 Удалить комментарий?')) return;
+                    DB.ref('sites/' + SITE_ID + '/feed_posts/' + postId + '/comments/' + commentId).remove();
+                };
+
+                // ===== УПРАВЛЕНИЕ ПОСТАМИ =====
+                let editingPostId = null;
+
+                function dfLoadPosts() {
+                    const postsRef = DB.ref('sites/' + SITE_ID + '/feed_posts');
+                    postsRef.orderByChild('timestamp').on('value', snap => {
+                        const container = document.getElementById('dfPosts');
+                        container.innerHTML = '';
+                        const data = snap.val() || {};
+                        const keys = Object.keys(data).sort((a, b) => (data[b].timestamp || 0) - (data[a].timestamp || 0));
+                        
+                        if (keys.length === 0) {
+                            container.innerHTML = \`
+                                <div class="df-empty">
+                                    <div class="df-empty-icon">📭</div>
+                                    <div class="df-empty-title">Нет постов</div>
+                                    <div class="df-empty-sub">Админ ещё не добавил новости</div>
+                                </div>
+                            \`;
+                            return;
+                        }
+                        
+                        keys.forEach(key => {
+                            const post = data[key];
+                            renderPost(container, post, key);
+                        });
+                    });
+                }
+
+                window.dfSubmitPost = function() {
+                    const marquee = document.getElementById('dfMarqueeInput').value.trim();
+                    const text = document.getElementById('dfTextInput').value.trim();
+                    const link = document.getElementById('dfLinkInput').value.trim();
+                    const hashtagsRaw = document.getElementById('dfHashtagsInput').value.trim();
+                    const hashtags = hashtagsRaw ? hashtagsRaw.split(/\\s+/).filter(t => t.startsWith('#')).slice(0, 5) : [];
+                    
+                    if (!text && !link) { alert('⚠️ Введите текст или ссылку'); return; }
+                    
+                    const buttons = [];
+                    document.querySelectorAll('#dfButtonsContainer .df-btn-group').forEach(g => {
+                        const label = g.querySelector('.df-btn-label').value.trim();
+                        const url = g.querySelector('.df-btn-url').value.trim();
+                        if (url) buttons.push({ label: label || '🔗 Перейти', url });
+                    });
+                    
+                    const postData = {
+                        author: USER || 'Аноним',
+                        text: text || '📝',
+                        time: now(),
+                        timestamp: Date.now(),
+                        marquee: marquee || null,
+                        link: link || null,
+                        buttons: buttons,
+                        hashtags: hashtags,
+                        seoDescription: hashtags.join(' ') + ' ' + (text || '').slice(0, 100),
+                        edited: false,
+                        img: null,
+                        likes: 0
+                    };
+                    
+                    const postsRef = DB.ref('sites/' + SITE_ID + '/feed_posts');
+                    if (editingPostId) {
+                        postsRef.child(editingPostId).update({...postData, edited: true, editedAt: Date.now()})
+                            .then(() => { dfCancelPost(); alert('✅ Пост обновлён!'); editingPostId = null; })
+                            .catch(e => alert('❌ ' + e.message));
+                    } else {
+                        postsRef.push(postData).then(() => { dfCancelPost(); alert('✅ Пост опубликован!'); })
+                            .catch(e => alert('❌ ' + e.message));
+                    }
+                };
+
+                window.dfEditPost = function(id) {
+                    editingPostId = id;
+                    const postsRef = DB.ref('sites/' + SITE_ID + '/feed_posts');
+                    postsRef.child(id).once('value', snap => {
+                        const post = snap.val();
+                        if (!post) return;
+                        document.getElementById('dfMarqueeInput').value = post.marquee || '';
+                        document.getElementById('dfTextInput').value = post.text || '';
+                        document.getElementById('dfLinkInput').value = post.link || '';
+                        document.getElementById('dfHashtagsInput').value = (post.hashtags || []).join(' ');
+                        const container = document.getElementById('dfButtonsContainer');
+                        container.innerHTML = '';
+                        const btns = post.buttons || [];
+                        btns.forEach(btn => dfAddButtonField(btn.label, btn.url));
+                        if (btns.length === 0) dfAddButtonField('', '');
+                        document.getElementById('dfCreateForm').classList.add('show');
+                        document.getElementById('dfCreateForm').scrollIntoView({behavior:'smooth'});
+                        document.querySelector('.df-submit-btn').textContent = '💾 Обновить';
+                    });
+                };
+
+                window.dfDeletePost = function(id) {
+                    if (!confirm('🗑 Удалить этот пост?')) return;
+                    DB.ref('sites/' + SITE_ID + '/feed_posts/' + id).remove().then(() => alert('✅ Удалено')).catch(e => alert('❌ ' + e.message));
+                };
+
+                window.dfCancelPost = function() {
+                    document.getElementById('dfMarqueeInput').value = '';
+                    document.getElementById('dfTextInput').value = '';
+                    document.getElementById('dfLinkInput').value = '';
+                    document.getElementById('dfHashtagsInput').value = '';
+                    document.getElementById('dfButtonsContainer').innerHTML = '';
+                    document.getElementById('dfCreateForm').classList.remove('show');
+                    document.querySelector('.df-submit-btn').textContent = '📤 Опубликовать';
+                    editingPostId = null;
+                };
+
+                window.dfAddButtonField = function(label = '', url = '') {
+                    const container = document.getElementById('dfButtonsContainer');
+                    const div = document.createElement('div');
+                    div.className = 'df-btn-group';
+                    div.innerHTML = \`
+                        <input class="df-btn-label" placeholder="Текст" value="\${escapeHtml(label)}">
+                        <input class="df-btn-url" placeholder="Ссылка" value="\${escapeHtml(url)}">
+                        <button class="df-remove-btn" onclick="dfRemoveButton(this)">✕</button>
+                    \`;
+                    container.appendChild(div);
+                };
+
+                window.dfRemoveButton = function(btn) {
+                    const group = btn.parentElement;
+                    if (document.getElementById('dfButtonsContainer').children.length > 1) {
+                        group.remove();
+                    } else {
+                        group.querySelector('.df-btn-label').value = '';
+                        group.querySelector('.df-btn-url').value = '';
+                    }
+                };
+
+                window.dfShowCreateForm = function() {
+                    if (IS_ADMIN) document.getElementById('dfCreateForm').classList.add('show');
+                };
+
+                // ===== ЗАПУСК =====
+                const style = document.createElement('style');
+                style.textContent = \`
+                    #deepchat-feed .df-post .df-chat-btn {
+                        background: #1a1a2a;
+                        border: 1px solid #2a2a3a;
+                        color: #66aaff;
+                        padding: 3px 14px;
+                        border-radius: 40px;
+                        font-size: 0.65rem;
+                        cursor: pointer;
+                    }
+                    #deepchat-feed .df-post .df-chat-btn:hover {
+                        background: #2a2a3a;
+                    }
+                \`;
+                root.appendChild(style);
+
+                const postsContainer = document.createElement('div');
+                postsContainer.className = 'df-posts';
+                postsContainer.id = 'dfPosts';
+                root.appendChild(postsContainer);
+
+                const formContainer = document.createElement('div');
+                formContainer.className = 'df-create-form';
+                formContainer.id = 'dfCreateForm';
+                formContainer.innerHTML = \`
+                    <div class="df-form-title">✏️ Новый пост / Объявление</div>
+                    <input type="text" id="dfMarqueeInput" placeholder="📢 Бегущая строка">
+                    <textarea id="dfTextInput" placeholder="📝 Текст поста..."></textarea>
+                    <input type="url" id="dfLinkInput" placeholder="🔗 Ссылка (iframe)">
+                    <input type="text" id="dfHashtagsInput" placeholder="#хештеги через пробел">
+                    <div style="color:#666;font-size:0.7rem;margin:4px 0;">🔘 Кнопки</div>
+                    <div id="dfButtonsContainer"></div>
+                    <button class="df-add-btn" onclick="dfAddButtonField()">➕ Добавить кнопку</button>
+                    <div class="df-form-actions">
+                        <button class="df-submit-btn" onclick="dfSubmitPost()">📤 Опубликовать</button>
+                        <button class="df-cancel-btn" onclick="dfCancelPost()">✕ Отмена</button>
+                    </div>
+                \`;
+                root.appendChild(formContainer);
+
+                if (IS_ADMIN) document.getElementById('dfCreateForm').classList.add('show');
+                dfLoadPosts();
+                console.log('📰 DeepFeed загружен с комментариями и лайками!');
+            })();
+        `);
+        root.appendChild(script);
+    }
+
+    // ================================================================
+    // ======  ЗАГРУЗКА ЧАТА (С ЛАЙКАМИ)  ======
+    // ================================================================
+
     function loadChatWidget(roomId) {
         const root = document.getElementById('deepchat-widget');
         if (!root) return;
@@ -998,6 +2001,15 @@
                 const IS_ADMIN = ${IS_ROOM_ADMIN};
                 const ROOM_ID = '${roomId}';
                 let currentUser = USER;
+
+                function escapeHtml(str) {
+                    if (!str) return '';
+                    return str.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+                }
+
+                function now() {
+                    return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                }
 
                 const style = document.createElement('style');
                 style.textContent = \`
@@ -1071,19 +2083,48 @@
                         border: 1px solid #333;
                         cursor: pointer;
                     }
+                    #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-footer {
+                        display: flex;
+                        gap: 8px;
+                        margin-top: 4px;
+                        align-items: center;
+                        flex-wrap: wrap;
+                    }
+                    #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn {
+                        background: none;
+                        border: none;
+                        color: #ff6b6b;
+                        font-size: 0.75rem;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 2px;
+                        padding: 0 4px;
+                        border-radius: 12px;
+                    }
+                    #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn:hover {
+                        background: rgba(255, 107, 107, 0.1);
+                    }
+                    #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn.liked {
+                        color: #ff4757;
+                    }
+                    #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-like-btn .dl-count {
+                        color: #888;
+                        font-size: 0.7rem;
+                    }
                     #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-actions {
                         display: flex;
                         gap: 4px;
-                        margin-top: 4px;
                         flex-wrap: wrap;
+                        margin-left: auto;
                     }
                     #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-actions button {
                         background: #222233;
                         border: 1px solid #333349;
                         color: #ccc;
-                        padding: 0 10px;
+                        padding: 0 9px;
                         border-radius: 40px;
-                        font-size: 0.55rem;
+                        font-size: 0.5rem;
                         cursor: pointer;
                     }
                     #deepchat-widget .dc-chat-root .dc-chat-panel .dc-messages .dc-msg .dc-msg-actions .dc-edit-btn {
@@ -1229,7 +2270,7 @@
                     const data = {
                         nick: currentUser,
                         text: text || '📷',
-                        time: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
+                        time: now(),
                         timestamp: Date.now(),
                         likes: 0,
                         img: pendingImage || null,
@@ -1283,11 +2324,14 @@
                         textHtml = textHtml.replace(linkMatch[1], \`<span style="color:#555;font-size:0.7rem;">\${linkMatch[1]}</span>\`);
                     }
 
-                    let imgHtml = m.img ? \`<img class="dc-msg-img" src="\${m.img}" onclick="window.open(this.src)">\` : '';
+                    let imgHtml = m.img ? \`<img class="dc-msg-img" src="\${escapeHtml(m.img)}" onclick="window.open(this.src)">\` : '';
+
+                    // Проверяем, лайкнул ли пользователь
+                    const userLiked = localStorage.getItem('dc_like_' + m.id + '_' + USER) === 'true';
+                    const likedClass = userLiked ? 'liked' : '';
 
                     let actionsHtml = \`
-                        <button onclick="dcLikeMsg('\${m.id}')">👍 \${m.likes || 0}</button>
-                        <button onclick="dcReplyMsg('\${m.id}','\${escapeHtml(m.nick)}')">💬 ответ</button>
+                        <button onclick="dcReplyMsg('\${escapeHtml(m.nick)}')">💬 ответ</button>
                     \`;
                     if (m.nick === currentUser) {
                         actionsHtml += \`<button class="dc-edit-btn" onclick="dcOpenEdit('\${m.id}')">✏️ ред.</button>\`;
@@ -1304,19 +2348,37 @@
                         </div>
                         <div class="dc-msg-text">\${textHtml}</div>
                         \${imgHtml}
-                        <div class="dc-msg-actions">\${actionsHtml}</div>
+                        <div class="dc-msg-footer">
+                            <button class="dc-like-btn \${likedClass}" onclick="dcToggleLike('\${m.id}')">
+                                ❤️ <span class="dl-count">\${m.likes || 0}</span>
+                            </button>
+                            <div class="dc-msg-actions">\${actionsHtml}</div>
+                        </div>
                     \`;
                     messagesDiv.appendChild(div);
                 }
 
-                window.dcLikeMsg = function(id) {
-                    const key = 'liked_' + id + '_' + currentUser;
-                    if (localStorage.getItem(key)) return;
-                    msgRef.child(id + '/likes').transaction(v => (v || 0) + 1);
+                window.dcToggleLike = function(msgId) {
+                    const key = 'dc_like_' + msgId + '_' + USER;
+                    if (localStorage.getItem(key) === 'true') {
+                        alert('❤️ Вы уже поставили лайк этому сообщению!');
+                        return;
+                    }
+                    
+                    if (IS_ADMIN) {
+                        const count = prompt('❤️ Введите количество лайков (1, 10, 100, 500):', '1');
+                        if (count === null) return;
+                        const num = parseInt(count);
+                        if (isNaN(num) || num < 1) { alert('⚠️ Введите корректное число'); return; }
+                        msgRef.child(msgId + '/likes').transaction(v => (v || 0) + num);
+                        return;
+                    }
+                    
+                    msgRef.child(msgId + '/likes').transaction(v => (v || 0) + 1);
                     localStorage.setItem(key, 'true');
                 };
 
-                window.dcReplyMsg = function(id, nick) {
+                window.dcReplyMsg = function(nick) {
                     const input = document.getElementById('dcMsgInput');
                     if (input) { input.value = '@' + nick + ' '; input.focus(); }
                 };
@@ -1375,592 +2437,7 @@
                     }
                 });
 
-                function escapeHtml(str) {
-                    if (!str) return '';
-                    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-                }
-            })();
-        `);
-        root.appendChild(script);
-    }
-
-    // ================================================================
-    // ======  ЗАГРУЗКА ЛЕНТЫ  ======
-    // ================================================================
-
-    function loadFeedWidget() {
-        const root = document.getElementById('deepchat-feed');
-        if (!root || root.dataset.loaded === 'true') return;
-        root.dataset.loaded = 'true';
-
-        const feedRef = feedDB.ref('sites/' + SITE_ID + '/feed_posts');
-        feedRef.once('value', snap => {
-            if (!snap.exists()) {
-                const examples = [
-                    {
-                        author: '📢 Администрация',
-                        text: 'Добро пожаловать в наше сообщество! Здесь вы можете общаться, делиться новостями и находить друзей.',
-                        time: '12:00',
-                        timestamp: Date.now() - 3600000,
-                        marquee: '🌟 Добро пожаловать в DeepChat! Будьте собой! 🌟',
-                        link: null,
-                        buttons: [{ label: '📋 Правила', url: '#' }],
-                        hashtags: ['#ДоброПожаловать', '#Сообщество'],
-                        seoDescription: 'Добро пожаловать в сообщество DeepChat',
-                        edited: false,
-                        img: null
-                    },
-                    {
-                        author: '🏳️‍🌈 Организатор',
-                        text: 'Завтра в 19:00 онлайн-встреча! Обсудим планы на месяц.',
-                        time: '11:30',
-                        timestamp: Date.now() - 7200000,
-                        marquee: '📅 Онлайн-встреча завтра в 19:00!',
-                        link: 'https://meet.google.com/',
-                        buttons: [{ label: '🔗 Подключиться', url: 'https://meet.google.com/' }],
-                        hashtags: ['#Встреча', '#Планы'],
-                        seoDescription: 'Онлайн-встреча сообщества завтра в 19:00',
-                        edited: false,
-                        img: null
-                    }
-                ];
-                examples.forEach(post => feedRef.push(post));
-            }
-        });
-
-        const script = document.createElement('script');
-        script.src = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(`
-            (function() {
-                const root = document.getElementById('deepchat-feed');
-                if (!root || root.dataset.loaded === 'true') return;
-                root.dataset.loaded = 'true';
-
-                const DB = feedDB;
-                const SITE_ID = '${SITE_ID}';
-                const USER = '${USER}';
-                const IS_ADMIN = ${IS_FEED_ADMIN};
-
-                const style = document.createElement('style');
-                style.textContent = \`
-                    #deepchat-feed * { margin: 0; padding: 0; box-sizing: border-box; }
-                    #deepchat-feed {
-                        display: block;
-                        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-                        background: #0a0a0a;
-                        color: #fff;
-                        width: 100%;
-                        min-height: 300px;
-                        position: relative;
-                    }
-                    #deepchat-feed .df-posts {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 16px;
-                    }
-                    #deepchat-feed .df-post {
-                        background: #0f0f1a;
-                        border: 1px solid #1a1a2a;
-                        border-radius: 16px;
-                        padding: 16px;
-                        transition: border-color 0.2s;
-                        animation: dfFadeIn 0.3s ease;
-                    }
-                    @keyframes dfFadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                    #deepchat-feed .df-post:hover { border-color: #2a2a3a; }
-                    #deepchat-feed .df-post .df-marquee {
-                        background: #0f0f1a;
-                        padding: 4px 0;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        border-radius: 6px;
-                        margin-bottom: 8px;
-                        border: 1px solid #1a1a2a;
-                    }
-                    #deepchat-feed .df-post .df-marquee span {
-                        display: inline-block;
-                        animation: dfScroll 10s linear infinite;
-                        color: #ff8c00;
-                        font-weight: 600;
-                        font-size: 0.85rem;
-                        padding-left: 16px;
-                    }
-                    @keyframes dfScroll {
-                        0% { transform: translateX(100%); }
-                        100% { transform: translateX(-100%); }
-                    }
-                    #deepchat-feed .df-post .df-post-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 6px;
-                        flex-wrap: wrap;
-                        gap: 4px;
-                    }
-                    #deepchat-feed .df-post .df-post-header .df-author {
-                        color: #ffaa44;
-                        font-weight: 700;
-                        font-size: 0.9rem;
-                    }
-                    #deepchat-feed .df-post .df-post-header .df-time {
-                        color: #666;
-                        font-size: 0.6rem;
-                    }
-                    #deepchat-feed .df-post .df-post-header .df-edit-badge {
-                        color: #555;
-                        font-size: 0.5rem;
-                    }
-                    #deepchat-feed .df-post .df-text {
-                        margin: 6px 0;
-                        word-break: break-word;
-                        font-size: 0.9rem;
-                        line-height: 1.5;
-                        color: #ddd;
-                    }
-                    #deepchat-feed .df-post .df-img {
-                        max-width: 100%;
-                        max-height: 250px;
-                        border-radius: 12px;
-                        margin: 8px 0;
-                        border: 1px solid #1a1a2a;
-                        cursor: pointer;
-                    }
-                    #deepchat-feed .df-post .df-frame {
-                        margin: 8px 0;
-                        border: 1px solid #1a1a2a;
-                        border-radius: 12px;
-                        overflow: hidden;
-                        background: #0f0f1a;
-                        width: 100%;
-                    }
-                    #deepchat-feed .df-post .df-frame iframe {
-                        width: 100%;
-                        height: 280px;
-                        border: none;
-                        display: block;
-                    }
-                    #deepchat-feed .df-post .df-buttons {
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 8px;
-                        margin: 8px 0;
-                    }
-                    #deepchat-feed .df-post .df-buttons .df-btn {
-                        display: inline-block;
-                        background: #ff8c00;
-                        border: none;
-                        border-radius: 10px;
-                        padding: 8px 18px;
-                        text-align: center;
-                        text-decoration: none;
-                        color: #0b0b0f;
-                        font-weight: 700;
-                        font-size: 0.85rem;
-                        cursor: pointer;
-                    }
-                    #deepchat-feed .df-post .df-buttons .df-btn:hover { background: #ffa033; }
-                    #deepchat-feed .df-post .df-hashtags {
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 4px;
-                        margin: 8px 0 4px 0;
-                        padding-top: 6px;
-                        border-top: 1px solid #1a1a2a;
-                    }
-                    #deepchat-feed .df-post .df-hashtags .df-tag {
-                        color: #66aaff;
-                        font-size: 0.65rem;
-                        background: #0f0f1a;
-                        padding: 0 10px;
-                        border-radius: 20px;
-                        border: 1px solid #1a1a2a;
-                    }
-                    #deepchat-feed .df-post .df-seo {
-                        display: none;
-                        font-size: 0.6rem;
-                        color: #333;
-                        margin-top: 8px;
-                        padding: 6px;
-                        background: #05050a;
-                        border-radius: 6px;
-                        border: 1px solid #0a0a12;
-                    }
-                    #deepchat-feed .df-post .df-seo.show { display: block; }
-                    #deepchat-feed .df-post .df-actions {
-                        display: flex;
-                        gap: 6px;
-                        margin-top: 8px;
-                        flex-wrap: wrap;
-                    }
-                    #deepchat-feed .df-post .df-actions button {
-                        background: #1a1a2a;
-                        border: 1px solid #2a2a3a;
-                        color: #ccc;
-                        padding: 0 12px;
-                        border-radius: 40px;
-                        font-size: 0.6rem;
-                        cursor: pointer;
-                    }
-                    #deepchat-feed .df-post .df-actions button:hover { background: #2a2a3a; }
-                    #deepchat-feed .df-post .df-actions .df-edit-btn {
-                        background: #2a2a3a;
-                        border-color: #ff8c00;
-                        color: #ff8c00;
-                    }
-                    #deepchat-feed .df-post .df-actions .df-del-btn {
-                        background: #4a1a1a;
-                        border-color: #6a1a1a;
-                        color: #ff6666;
-                    }
-                    #deepchat-feed .df-post .df-chat-btn {
-                        background: #1a1a2a;
-                        border: 1px solid #2a2a3a;
-                        color: #66aaff;
-                        padding: 0 16px;
-                        border-radius: 40px;
-                        font-size: 0.7rem;
-                        cursor: pointer;
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 6px;
-                        margin-top: 4px;
-                    }
-                    #deepchat-feed .df-post .df-chat-btn:hover {
-                        background: #2a2a3a;
-                        border-color: #4a4a5a;
-                    }
-                    #deepchat-feed .df-empty {
-                        text-align: center;
-                        padding: 60px 20px;
-                        color: #444;
-                    }
-                    #deepchat-feed .df-empty .df-empty-icon { font-size: 3rem; margin-bottom: 12px; }
-                    #deepchat-feed .df-empty .df-empty-title { font-size: 1.2rem; color: #666; }
-                    #deepchat-feed .df-empty .df-empty-sub { font-size: 0.85rem; color: #444; }
-                    #deepchat-feed .df-create-form {
-                        display: none;
-                        background: #0f0f1a;
-                        border: 1px solid #1a1a2a;
-                        border-radius: 16px;
-                        padding: 16px;
-                        margin-bottom: 16px;
-                    }
-                    #deepchat-feed .df-create-form.show { display: block; }
-                    #deepchat-feed .df-create-form .df-form-title {
-                        color: #ff8c00;
-                        font-weight: 700;
-                        margin-bottom: 10px;
-                        font-size: 0.95rem;
-                    }
-                    #deepchat-feed .df-create-form input,
-                    #deepchat-feed .df-create-form textarea {
-                        width: 100%;
-                        padding: 10px 14px;
-                        background: #0a0a12;
-                        border: 1px solid #1a1a2a;
-                        border-radius: 10px;
-                        color: #fff;
-                        font-size: 0.9rem;
-                        outline: none;
-                        margin-bottom: 8px;
-                        font-family: inherit;
-                    }
-                    #deepchat-feed .df-create-form input:focus,
-                    #deepchat-feed .df-create-form textarea:focus { border-color: #ff8c00; }
-                    #deepchat-feed .df-create-form textarea { min-height: 60px; resize: vertical; }
-                    #deepchat-feed .df-create-form .df-btn-group {
-                        display: flex;
-                        gap: 6px;
-                        margin-bottom: 6px;
-                        align-items: center;
-                    }
-                    #deepchat-feed .df-create-form .df-btn-group input { flex: 1; margin-bottom: 0; }
-                    #deepchat-feed .df-create-form .df-btn-group .df-remove-btn {
-                        background: #4a1a1a;
-                        color: #ff6666;
-                        border: none;
-                        border-radius: 30px;
-                        padding: 4px 10px;
-                        cursor: pointer;
-                        font-size: 0.7rem;
-                    }
-                    #deepchat-feed .df-create-form .df-add-btn {
-                        background: #1a1a2a;
-                        border: 1px solid #2a2a3a;
-                        color: #ff8c00;
-                        padding: 4px 16px;
-                        border-radius: 40px;
-                        cursor: pointer;
-                        font-size: 0.8rem;
-                        margin-bottom: 6px;
-                    }
-                    #deepchat-feed .df-create-form .df-add-btn:hover { background: #2a2a3a; }
-                    #deepchat-feed .df-create-form .df-form-actions {
-                        display: flex;
-                        gap: 8px;
-                        margin-top: 10px;
-                    }
-                    #deepchat-feed .df-create-form .df-form-actions button {
-                        padding: 8px 20px;
-                        border-radius: 40px;
-                        border: none;
-                        font-weight: 700;
-                        cursor: pointer;
-                        font-size: 0.85rem;
-                    }
-                    #deepchat-feed .df-create-form .df-form-actions .df-submit-btn {
-                        background: #ff8c00;
-                        color: #0b0b0f;
-                    }
-                    #deepchat-feed .df-create-form .df-form-actions .df-submit-btn:hover { background: #ffa033; }
-                    #deepchat-feed .df-create-form .df-form-actions .df-cancel-btn {
-                        background: #2a2a2a;
-                        color: #aaa;
-                    }
-                    #deepchat-feed .df-create-form .df-form-actions .df-cancel-btn:hover { background: #3a3a3a; }
-                    #deepchat-feed .df-post-footer {
-                        display: flex;
-                        gap: 12px;
-                        margin-top: 8px;
-                        padding-top: 8px;
-                        border-top: 1px solid #1a1a2a;
-                        flex-wrap: wrap;
-                        align-items: center;
-                    }
-                    #deepchat-feed ::-webkit-scrollbar { width: 4px; }
-                    #deepchat-feed ::-webkit-scrollbar-track { background: transparent; }
-                    #deepchat-feed ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
-                    @media (max-width: 640px) {
-                        #deepchat-feed .df-post .df-frame iframe { height: 200px; }
-                        #deepchat-feed .df-post { padding: 12px; }
-                        #deepchat-feed .df-post .df-text { font-size: 0.85rem; }
-                        #deepchat-feed .df-post .df-img { max-height: 200px; }
-                    }
-                    @media (max-width: 400px) {
-                        #deepchat-feed .df-post .df-frame iframe { height: 160px; }
-                        #deepchat-feed .df-post .df-img { max-height: 160px; }
-                        #deepchat-feed .df-create-form .df-btn-group { flex-wrap: wrap; }
-                        #deepchat-feed .df-create-form .df-btn-group input { min-width: 60px; }
-                    }
-                \`;
-                root.appendChild(style);
-
-                const postsContainer = document.createElement('div');
-                postsContainer.className = 'df-posts';
-                postsContainer.id = 'dfPosts';
-                root.appendChild(postsContainer);
-
-                const formContainer = document.createElement('div');
-                formContainer.className = 'df-create-form';
-                formContainer.id = 'dfCreateForm';
-                formContainer.innerHTML = \`
-                    <div class="df-form-title">✏️ Новый пост / Объявление</div>
-                    <input type="text" id="dfMarqueeInput" placeholder="📢 Бегущая строка">
-                    <textarea id="dfTextInput" placeholder="📝 Текст поста..."></textarea>
-                    <input type="url" id="dfLinkInput" placeholder="🔗 Ссылка (iframe)">
-                    <input type="text" id="dfHashtagsInput" placeholder="#хештеги через пробел">
-                    <div style="color:#666;font-size:0.7rem;margin:4px 0;">🔘 Кнопки</div>
-                    <div id="dfButtonsContainer"></div>
-                    <button class="df-add-btn" onclick="dfAddButtonField()">➕ Добавить кнопку</button>
-                    <div class="df-form-actions">
-                        <button class="df-submit-btn" onclick="dfSubmitPost()">📤 Опубликовать</button>
-                        <button class="df-cancel-btn" onclick="dfCancelPost()">✕ Отмена</button>
-                    </div>
-                \`;
-                root.appendChild(formContainer);
-
-                let editingPostId = null;
-
-                function dfLoadPosts() {
-                    const postsRef = DB.ref('sites/' + SITE_ID + '/feed_posts');
-                    postsRef.orderByChild('timestamp').on('value', snap => {
-                        const container = document.getElementById('dfPosts');
-                        container.innerHTML = '';
-                        const data = snap.val() || {};
-                        const keys = Object.keys(data).sort((a, b) => (data[b].timestamp || 0) - (data[a].timestamp || 0));
-                        if (keys.length === 0) {
-                            container.innerHTML = \`
-                                <div class="df-empty">
-                                    <div class="df-empty-icon">📭</div>
-                                    <div class="df-empty-title">Нет постов</div>
-                                    <div class="df-empty-sub">Админ ещё не добавил новости</div>
-                                </div>
-                            \`;
-                            return;
-                        }
-                        keys.forEach(key => {
-                            const post = data[key];
-                            post.id = key;
-                            dfRenderPost(container, post);
-                        });
-                    });
-                }
-
-                function dfRenderPost(container, post) {
-                    const div = document.createElement('div');
-                    div.className = 'df-post';
-                    div.dataset.id = post.id;
-
-                    let marqueeHtml = post.marquee ? \`<div class="df-marquee"><span>\${escapeHtml(post.marquee)}</span></div>\` : '';
-                    let imgHtml = post.img ? \`<img class="df-img" src="\${post.img}" onclick="window.open(this.src)">\` : '';
-                    let frameHtml = post.link ? \`<div class="df-frame"><iframe src="\${post.link}" sandbox="allow-scripts allow-same-origin allow-popups"></iframe></div>\` : '';
-                    let buttonsHtml = '';
-                    if (post.buttons && post.buttons.length > 0) {
-                        buttonsHtml = '<div class="df-buttons">';
-                        post.buttons.forEach(btn => {
-                            if (btn.url) buttonsHtml += \`<a href="\${escapeHtml(btn.url)}" target="_blank" class="df-btn">\${escapeHtml(btn.label || '🔗 Перейти')}</a>\`;
-                        });
-                        buttonsHtml += '</div>';
-                    }
-                    let hashtagsHtml = '';
-                    if (post.hashtags && post.hashtags.length > 0) {
-                        hashtagsHtml = '<div class="df-hashtags">';
-                        post.hashtags.forEach(tag => hashtagsHtml += \`<span class="df-tag">\${escapeHtml(tag)}</span>\`);
-                        hashtagsHtml += '</div>';
-                    }
-                    let seoHtml = post.seoDescription ? \`<div class="df-seo show">🔍 SEO: \${escapeHtml(post.seoDescription)}</div>\` : '';
-                    let actionsHtml = '';
-                    if (IS_ADMIN || post.author === USER) {
-                        actionsHtml = \`
-                            <div class="df-actions">
-                                <button class="df-edit-btn" onclick="dfEditPost('\${post.id}')">✏️ Ред.</button>
-                                <button class="df-del-btn" onclick="dfDeletePost('\${post.id}')">🗑 Удалить</button>
-                            </div>
-                        \`;
-                    }
-
-                    div.innerHTML = \`
-                        \${marqueeHtml}
-                        <div class="df-post-header">
-                            <span class="df-author">\${escapeHtml(post.author || 'Аноним')}</span>
-                            <span class="df-time">\${post.time || ''}</span>
-                            \${post.edited ? '<span class="df-edit-badge">(ред.)</span>' : ''}
-                        </div>
-                        <div class="df-text">\${escapeHtml(post.text || '')}</div>
-                        \${imgHtml}
-                        \${buttonsHtml}
-                        \${frameHtml}
-                        \${hashtagsHtml}
-                        \${seoHtml}
-                        \${actionsHtml}
-                        <div class="df-post-footer">
-                            <button class="df-chat-btn" onclick="openPostChat('\${post.id}','\${escapeHtml((post.text || 'Пост').slice(0,30))}')">
-                                💬 Обсудить
-                            </button>
-                        </div>
-                    \`;
-                    container.appendChild(div);
-                }
-
-                window.dfSubmitPost = function() {
-                    const marquee = document.getElementById('dfMarqueeInput').value.trim();
-                    const text = document.getElementById('dfTextInput').value.trim();
-                    const link = document.getElementById('dfLinkInput').value.trim();
-                    const hashtagsRaw = document.getElementById('dfHashtagsInput').value.trim();
-                    const hashtags = hashtagsRaw ? hashtagsRaw.split(/\\s+/).filter(t => t.startsWith('#')).slice(0, 5) : [];
-                    if (!text && !link) { alert('⚠️ Введите текст или ссылку'); return; }
-                    const buttons = [];
-                    document.querySelectorAll('#dfButtonsContainer .df-btn-group').forEach(g => {
-                        const label = g.querySelector('.df-btn-label').value.trim();
-                        const url = g.querySelector('.df-btn-url').value.trim();
-                        if (url) buttons.push({ label: label || '🔗 Перейти', url });
-                    });
-                    const postData = {
-                        author: USER || 'Аноним',
-                        text: text || '📝',
-                        time: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
-                        timestamp: Date.now(),
-                        marquee: marquee || null,
-                        link: link || null,
-                        buttons: buttons,
-                        hashtags: hashtags,
-                        seoDescription: hashtags.join(' ') + ' ' + (text || '').slice(0, 100),
-                        edited: false,
-                        img: null
-                    };
-                    const postsRef = DB.ref('sites/' + SITE_ID + '/feed_posts');
-                    if (editingPostId) {
-                        postsRef.child(editingPostId).update({...postData, edited: true, editedAt: Date.now()})
-                            .then(() => { dfCancelPost(); alert('✅ Пост обновлён!'); editingPostId = null; })
-                            .catch(e => alert('❌ ' + e.message));
-                    } else {
-                        postsRef.push(postData).then(() => { dfCancelPost(); alert('✅ Пост опубликован!'); })
-                            .catch(e => alert('❌ ' + e.message));
-                    }
-                };
-
-                window.dfEditPost = function(id) {
-                    editingPostId = id;
-                    const postsRef = DB.ref('sites/' + SITE_ID + '/feed_posts');
-                    postsRef.child(id).once('value', snap => {
-                        const post = snap.val();
-                        if (!post) return;
-                        document.getElementById('dfMarqueeInput').value = post.marquee || '';
-                        document.getElementById('dfTextInput').value = post.text || '';
-                        document.getElementById('dfLinkInput').value = post.link || '';
-                        document.getElementById('dfHashtagsInput').value = (post.hashtags || []).join(' ');
-                        const container = document.getElementById('dfButtonsContainer');
-                        container.innerHTML = '';
-                        const btns = post.buttons || [];
-                        btns.forEach(btn => dfAddButtonField(btn.label, btn.url));
-                        if (btns.length === 0) dfAddButtonField('', '');
-                        document.getElementById('dfCreateForm').classList.add('show');
-                        document.getElementById('dfCreateForm').scrollIntoView({behavior:'smooth'});
-                        document.querySelector('.df-submit-btn').textContent = '💾 Обновить';
-                    });
-                };
-
-                window.dfDeletePost = function(id) {
-                    if (!confirm('🗑 Удалить этот пост?')) return;
-                    DB.ref('sites/' + SITE_ID + '/feed_posts/' + id).remove().then(() => alert('✅ Удалено')).catch(e => alert('❌ ' + e.message));
-                };
-
-                window.dfCancelPost = function() {
-                    document.getElementById('dfMarqueeInput').value = '';
-                    document.getElementById('dfTextInput').value = '';
-                    document.getElementById('dfLinkInput').value = '';
-                    document.getElementById('dfHashtagsInput').value = '';
-                    document.getElementById('dfButtonsContainer').innerHTML = '';
-                    document.getElementById('dfCreateForm').classList.remove('show');
-                    document.querySelector('.df-submit-btn').textContent = '📤 Опубликовать';
-                    editingPostId = null;
-                };
-
-                window.dfAddButtonField = function(label = '', url = '') {
-                    const container = document.getElementById('dfButtonsContainer');
-                    const div = document.createElement('div');
-                    div.className = 'df-btn-group';
-                    div.innerHTML = \`
-                        <input class="df-btn-label" placeholder="Текст" value="\${escapeHtml(label)}">
-                        <input class="df-btn-url" placeholder="Ссылка" value="\${escapeHtml(url)}">
-                        <button class="df-remove-btn" onclick="dfRemoveButton(this)">✕</button>
-                    \`;
-                    container.appendChild(div);
-                };
-
-                window.dfRemoveButton = function(btn) {
-                    const group = btn.parentElement;
-                    if (document.getElementById('dfButtonsContainer').children.length > 1) {
-                        group.remove();
-                    } else {
-                        group.querySelector('.df-btn-label').value = '';
-                        group.querySelector('.df-btn-url').value = '';
-                    }
-                };
-
-                window.dfShowCreateForm = function() {
-                    if (IS_ADMIN) document.getElementById('dfCreateForm').classList.add('show');
-                };
-
-                function escapeHtml(str) {
-                    if (!str) return '';
-                    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-                }
-
-                if (IS_ADMIN) document.getElementById('dfCreateForm').classList.add('show');
-                dfLoadPosts();
+                console.log('💬 Чат загружен с лайками для комнаты:', ROOM_ID);
             })();
         `);
         root.appendChild(script);
@@ -1979,10 +2456,11 @@
     loadRoomsInSidebar();
 
     console.log('🚀 DeepChat App загружен!');
-    console.log('📰 ПЕРВЫЙ Firebase — Лента');
-    console.log('💬 ВТОРОЙ Firebase — Чаты');
+    console.log('📰 ПЕРВЫЙ Firebase — Лента (посты + комментарии + лайки)');
+    console.log('💬 ВТОРОЙ Firebase — Чаты (сообщения + лайки)');
     console.log('📰 Админ ленты (пароль 12345)');
     console.log('💬 Админ комнат (пароль 12345)');
+    console.log('❤️ Админ может накручивать лайки (1, 10, 100, 500)');
     </script>
 
 </body>
